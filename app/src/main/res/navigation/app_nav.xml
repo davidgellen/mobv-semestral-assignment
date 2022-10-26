@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/app_nav"
+    app:startDestination="@id/allEntriesFragment">
+
+    <fragment
+        android:id="@+id/entryInfo"
+        android:name="com.example.cv2.EntryInfo"
+        android:label="fragment_entry_info"
+        tools:layout="@layout/fragment_entry_info" >
+        <argument
+            android:name="name"
+            app:argType="string" />
+        <argument
+            android:name="businessName"
+            app:argType="string" />
+        <argument
+            android:name="lattitude"
+            app:argType="float" />
+        <argument
+            android:name="longtitude"
+            app:argType="float" />
+        <action
+            android:id="@+id/action_entryInfo_to_allEntriesFragment"
+            app:destination="@id/allEntriesFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/addNewEntry"
+        android:name="com.example.cv2.AddNewEntry"
+        android:label="fragment_add_new_entry"
+        tools:layout="@layout/fragment_add_new_entry" >
+        <action
+            android:id="@+id/action_addNewEntry_to_entryInfo"
+            app:destination="@id/entryInfo" />
+    </fragment>
+    <fragment
+        android:id="@+id/allEntriesFragment"
+        android:name="com.example.cv2.AllEntriesFragment"
+        android:label="fragment_all_entries"
+        tools:layout="@layout/fragment_all_entries" >
+        <action
+            android:id="@+id/action_allEntriesFragment_to_addNewEntry"
+            app:destination="@id/addNewEntry" />
+        <action
+            android:id="@+id/action_allEntriesFragment_to_entryDetailFragment"
+            app:destination="@id/entryDetailFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/entryDetailFragment"
+        android:name="com.example.cv2.EntryDetailFragment"
+        android:label="fragment_entry_detail"
+        tools:layout="@layout/fragment_entry_detail" >
+        <action
+            android:id="@+id/action_entryDetailFragment_to_allEntriesFragment"
+            app:destination="@id/allEntriesFragment" />
+    </fragment>
+</navigation>
