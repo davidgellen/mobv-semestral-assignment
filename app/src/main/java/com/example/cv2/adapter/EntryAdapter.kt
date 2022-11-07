@@ -15,7 +15,7 @@ import com.example.cv2.R
 import com.example.cv2.data.Entry
 
 class EntryAdapter(
-    private val context: AllEntriesFragment,
+    private val context: View,
     private val entries: MutableList<Entry>,
 ) : RecyclerView.Adapter<EntryAdapter.EntryViewHolder>(){
 
@@ -36,6 +36,10 @@ class EntryAdapter(
             view.findNavController().navigate(R.id.action_allEntriesFragment_to_entryDetailFragment, bundle)
         }
         holder.textView.text = entries[position].tags.name
+    }
+
+    fun kokot() {
+        this.notifyDataSetChanged();
     }
 
     override fun getItemCount(): Int {
