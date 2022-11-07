@@ -1,4 +1,4 @@
-package com.example.cv2.data
+package com.example.cv2.data.jsonmapper
 
 import com.google.gson.annotations.SerializedName
 

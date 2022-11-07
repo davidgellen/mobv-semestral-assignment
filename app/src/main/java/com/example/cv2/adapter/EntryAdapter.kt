@@ -4,15 +4,11 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.EditText
 import android.widget.TextView
-import androidx.navigation.Navigation.findNavController
 import androidx.navigation.findNavController
-import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
-import com.example.cv2.AllEntriesFragment
 import com.example.cv2.R
-import com.example.cv2.data.Entry
+import com.example.cv2.data.jsonmapper.Entry
 
 class EntryAdapter(
     private val context: View,

@@ -7,11 +7,15 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
-import com.example.cv2.data.Entry
-import com.example.cv2.data.Tag
+import com.example.cv2.data.jsonmapper.Entry
+import com.example.cv2.data.jsonmapper.Tag
+import com.example.cv2.data.model.EntryViewModel
 
 class AddNewEntry : Fragment() {
+
+    private val entryViewModel: EntryViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -30,7 +34,7 @@ class AddNewEntry : Fragment() {
             // adds to list of entries
             val newEntry = Entry(null, lat, lon,
                 Tag(businessName, null, null, null, null, null, null, null))
-            AllEntriesFragment.globalMutableEntries.add(0, newEntry)
+            entryViewModel.entries.add(0, newEntry)
 
             // args for next fragment
             val bundle = Bundle()

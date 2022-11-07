@@ -7,13 +7,15 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageButton
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.example.cv2.adapter.EntryAdapter
-import com.example.cv2.data.Entry
-import com.example.cv2.data.EntryDatasourceWrapper
-import com.example.cv2.data.PubsRequestBody
-import com.example.cv2.database.RetrofitApi
+import com.example.cv2.data.jsonmapper.Entry
+import com.example.cv2.data.jsonmapper.EntryDatasourceWrapper
+import com.example.cv2.data.model.EntryViewModel
+import com.example.cv2.data.request.PubsRequestBody
+import com.example.cv2.service.RetrofitApi
 import com.google.gson.GsonBuilder
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -21,9 +23,8 @@ import java.io.IOException
 import java.io.InputStream
 
 class AllEntriesFragment : Fragment() {
-//    override fun onCreate(savedInstanceState: Bundle?) {
-//        super.onCreate(savedInstanceState)
-//    }
+
+    private val entryViewModel: EntryViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -32,29 +33,30 @@ class AllEntriesFragment : Fragment() {
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_all_entries, container, false)
         val recyclerView = view.findViewById<RecyclerView>(R.id.enttries_recycle_view)
-        recyclerView.adapter = EntryAdapter(view, globalMutableEntries)
+        recyclerView.adapter = EntryAdapter(view, entryViewModel.entries)
         GlobalScope.launch{
-            if (globalMutableEntries.size == 0) {
-                globalMutableEntries = loadJsonFromServer().toMutableList()
+            if (entryViewModel.entries.size == 0) {
+                val fetchedEntries = loadJsonFromServer().toMutableList()
+                entryViewModel.setEntries(fetchedEntries)
                 activity?.runOnUiThread {
-                    recyclerView.adapter = EntryAdapter(view, globalMutableEntries)
+                    recyclerView.adapter = EntryAdapter(view, entryViewModel.entries)
                 }
-                Log.i("data", "loaded from POST REQUEST")
+                Log.i("data", "loaded from POST REQUEST, size: " + entryViewModel.entries.size)
             }
         }
         view.findViewById<ImageButton>(R.id.toAddEntryButton).setOnClickListener {
             findNavController().navigate(R.id.action_allEntriesFragment_to_addNewEntry)
         }
         view.findViewById<ImageButton>(R.id.sortEntriesButton).setOnClickListener {
-            globalMutableEntries.sortBy { it.tags.name }
+            entryViewModel.entries.sortBy { it.tags.name }
             (recyclerView.adapter as EntryAdapter).notifyDataSetChanged()
         }
         return view
     }
 
-    companion object {
-        var globalMutableEntries = mutableListOf<Entry>()
-    }
+//    companion object {
+//        var globalMutableEntries = mutableListOf<Entry>()
+//    }
 
     private suspend fun loadJsonFromServer(): List<Entry> {
         val requestBody = PubsRequestBody("bars", "mobvapp", "Cluster0")

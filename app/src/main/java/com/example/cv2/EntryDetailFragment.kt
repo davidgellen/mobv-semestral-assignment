@@ -7,10 +7,14 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageButton
 import android.widget.TextView
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
-import com.example.cv2.data.Entry
+import com.example.cv2.data.jsonmapper.Entry
+import com.example.cv2.data.model.EntryViewModel
 
 class EntryDetailFragment : Fragment() {
+
+    private val entryViewModel: EntryViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -24,7 +28,7 @@ class EntryDetailFragment : Fragment() {
         view.findViewById<TextView>(R.id.detailCity).text = "Adresa: " + createAddress(entry.tags.street,entry.tags.houseNumber, entry.tags.city, entry.tags.country)
         view.findViewById<TextView>(R.id.editWebsite).text = "Stranka: " + mapNullStringToEmpty(entry.tags.website)
         view.findViewById<ImageButton>(R.id.editDeleteCurrent).setOnClickListener {
-            AllEntriesFragment.globalMutableEntries.remove(entry)
+            entryViewModel.entries.remove(entry)
             findNavController().navigate(R.id.action_entryDetailFragment_to_allEntriesFragment)
         }
         return view

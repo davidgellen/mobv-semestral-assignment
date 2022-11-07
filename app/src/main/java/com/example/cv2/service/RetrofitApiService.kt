@@ -1,9 +1,7 @@
-package com.example.cv2.database
+package com.example.cv2.service
 
-import com.example.cv2.data.Entry
-import com.example.cv2.data.EntryDatasourceWrapper
-import com.example.cv2.data.PubsRequestBody
-import okhttp3.OkHttpClient
+import com.example.cv2.data.jsonmapper.EntryDatasourceWrapper
+import com.example.cv2.data.request.PubsRequestBody
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.converter.scalars.ScalarsConverterFactory
