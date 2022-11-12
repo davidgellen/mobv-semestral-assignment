@@ -7,7 +7,10 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageButton
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Observer
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.example.cv2.adapter.EntryAdapter
@@ -17,14 +20,16 @@ import com.example.cv2.data.model.EntryViewModel
 import com.example.cv2.data.request.PubsRequestBody
 import com.example.cv2.service.RetrofitApi
 import com.google.gson.GsonBuilder
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.io.IOException
 import java.io.InputStream
 
 class AllEntriesFragment : Fragment() {
 
-    private val entryViewModel: EntryViewModel by viewModels()
+    private val entryViewModel: EntryViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -33,22 +38,21 @@ class AllEntriesFragment : Fragment() {
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_all_entries, container, false)
         val recyclerView = view.findViewById<RecyclerView>(R.id.enttries_recycle_view)
-        recyclerView.adapter = EntryAdapter(view, entryViewModel.entries)
+        recyclerView.adapter = entryViewModel.entries.value?.let { EntryAdapter(view, it) }
         GlobalScope.launch{
-            if (entryViewModel.entries.size == 0) {
+            if (entryViewModel.entries.value?.size ?: 0 == 0) {
                 val fetchedEntries = loadJsonFromServer().toMutableList()
-                entryViewModel.setEntries(fetchedEntries)
                 activity?.runOnUiThread {
-                    recyclerView.adapter = EntryAdapter(view, entryViewModel.entries)
+                    entryViewModel.setEntries(fetchedEntries)
+                    recyclerView.adapter = entryViewModel.entries.value?.let { EntryAdapter(view, it) }
                 }
-                Log.i("data", "loaded from POST REQUEST, size: " + entryViewModel.entries.size)
             }
         }
         view.findViewById<ImageButton>(R.id.toAddEntryButton).setOnClickListener {
             findNavController().navigate(R.id.action_allEntriesFragment_to_addNewEntry)
         }
         view.findViewById<ImageButton>(R.id.sortEntriesButton).setOnClickListener {
-            entryViewModel.entries.sortBy { it.tags.name }
+            entryViewModel.entries.value?.sortBy { it.tags.name }
             (recyclerView.adapter as EntryAdapter).notifyDataSetChanged()
         }
         return view

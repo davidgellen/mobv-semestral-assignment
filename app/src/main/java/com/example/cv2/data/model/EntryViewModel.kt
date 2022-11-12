@@ -1,6 +1,8 @@
 package com.example.cv2.data.model
 
 import android.util.Log
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.cv2.data.jsonmapper.Entry
 import com.example.cv2.data.jsonmapper.EntryDatasourceWrapper
@@ -9,13 +11,13 @@ import com.example.cv2.service.RetrofitApi
 
 class EntryViewModel : ViewModel() {
 
-    private var _entries = mutableListOf<Entry>()
+    private var _entries = MutableLiveData<MutableList<Entry>>()
 
-    val entries: MutableList<Entry>
+    val entries: LiveData<MutableList<Entry>>
         get() = _entries
 
     fun setEntries(list: MutableList<Entry>) {
-        _entries = list
+        _entries.value = list
     }
 
 
@@ -31,7 +33,6 @@ class EntryViewModel : ViewModel() {
 //                Log.i("data", "loaded from POST REQUEST, size: " + entries.size)
 //            }
 //        }
-        Log.d("entries size", entries.size.toString())
     }
 
     private suspend fun loadJsonFromServer(): List<Entry> {

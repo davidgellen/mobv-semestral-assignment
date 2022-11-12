@@ -28,7 +28,7 @@ class EntryDetailFragment : Fragment() {
         view.findViewById<TextView>(R.id.detailCity).text = "Adresa: " + createAddress(entry.tags.street,entry.tags.houseNumber, entry.tags.city, entry.tags.country)
         view.findViewById<TextView>(R.id.editWebsite).text = "Stranka: " + mapNullStringToEmpty(entry.tags.website)
         view.findViewById<ImageButton>(R.id.editDeleteCurrent).setOnClickListener {
-            entryViewModel.entries.remove(entry)
+            entryViewModel.entries.value?.remove(entry)
             findNavController().navigate(R.id.action_entryDetailFragment_to_allEntriesFragment)
         }
         return view

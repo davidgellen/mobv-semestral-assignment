@@ -34,7 +34,7 @@ class AddNewEntry : Fragment() {
             // adds to list of entries
             val newEntry = Entry(null, lat, lon,
                 Tag(businessName, null, null, null, null, null, null, null))
-            entryViewModel.entries.add(0, newEntry)
+            entryViewModel.entries.value?.add(0, newEntry)
 
             // args for next fragment
             val bundle = Bundle()
