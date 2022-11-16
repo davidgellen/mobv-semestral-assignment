@@ -14,14 +14,19 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.example.cv2.adapter.EntryAdapter
+import com.example.cv2.application.PubApplication
+import com.example.cv2.dao.PubDao
+import com.example.cv2.data.entity.Pub
 import com.example.cv2.data.jsonmapper.Entry
 import com.example.cv2.data.jsonmapper.EntryDatasourceWrapper
 import com.example.cv2.data.model.EntryViewModel
+import com.example.cv2.data.model.PubViewModelFactory
 import com.example.cv2.data.request.PubsRequestBody
 import com.example.cv2.service.RetrofitApi
 import com.google.gson.GsonBuilder
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.IOException
@@ -29,7 +34,14 @@ import java.io.InputStream
 
 class AllEntriesFragment : Fragment() {
 
-    private val entryViewModel: EntryViewModel by activityViewModels()
+    private val entryViewModel: EntryViewModel by activityViewModels() {
+        PubViewModelFactory(
+            (activity?.application as PubApplication).database.pubDao()
+        )
+    }
+
+//    private val dao = (activity?.application as PubApplication).database.pubDao()
+//    private val entryViewModel(dao): EntryViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -39,6 +51,11 @@ class AllEntriesFragment : Fragment() {
         val view = inflater.inflate(R.layout.fragment_all_entries, container, false)
         val recyclerView = view.findViewById<RecyclerView>(R.id.enttries_recycle_view)
         recyclerView.adapter = entryViewModel.entries.value?.let { EntryAdapter(view, it) }
+
+        val pub: Pub = Pub(0, 124, 20.3, 20.4)
+        val kktkot = entryViewModel.insertPub(pub)
+        val stuff = entryViewModel.getAllEntries()
+
         GlobalScope.launch{
             if (entryViewModel.entries.value?.size ?: 0 == 0) {
                 val fetchedEntries = loadJsonFromServer().toMutableList()

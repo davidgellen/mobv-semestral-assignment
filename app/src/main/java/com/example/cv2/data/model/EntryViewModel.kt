@@ -1,44 +1,65 @@
 package com.example.cv2.data.model
 
-import android.util.Log
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
+import androidx.lifecycle.*
+import com.example.cv2.dao.PubDao
+import com.example.cv2.data.entity.Pub
 import com.example.cv2.data.jsonmapper.Entry
 import com.example.cv2.data.jsonmapper.EntryDatasourceWrapper
 import com.example.cv2.data.request.PubsRequestBody
 import com.example.cv2.service.RetrofitApi
+import kotlinx.coroutines.launch
 
-class EntryViewModel : ViewModel() {
+class EntryViewModel(
+    private val pubDao: PubDao
+) : ViewModel() {
 
     private var _entries = MutableLiveData<MutableList<Entry>>()
 
     val entries: LiveData<MutableList<Entry>>
         get() = _entries
 
-    fun setEntries(list: MutableList<Entry>) {
+    fun setEntries(
+        list: MutableList<Entry>
+    ) {
         _entries.value = list
     }
 
-
-
-    init {
-        Log.d("GameFragment", "GameViewModel created!")
-//        GlobalScope.launch{
-//            if (_entries.size == 0) {
-//                _entries = loadJsonFromServer().toMutableList()
-////                activity?.runOnUiThread {
-////                    recyclerView.adapter = EntryAdapter(view, entryViewModel.entries)
-////                }
-//                Log.i("data", "loaded from POST REQUEST, size: " + entries.size)
-//            }
-//        }
+    fun insertPub(
+        pub: Pub
+    ) {
+        viewModelScope.launch {
+            pubDao.insert(pub)
+        }
     }
 
-    private suspend fun loadJsonFromServer(): List<Entry> {
-        val requestBody = PubsRequestBody("bars", "mobvapp", "Cluster0")
-        val entries: EntryDatasourceWrapper = RetrofitApi.retrofitService.getData(requestBody)
-        return entries.documents
+    fun getAllEntries() {
+        pubDao.getAll()
+    }
+
+    private fun getNewPubEntry(
+        importedId: Long,
+        lat: Double,
+        lon: Double
+    ): Pub {
+        return Pub(
+            importedId = importedId,
+            lat = lat,
+            lon = lon
+        )
+    }
+
+}
+
+class PubViewModelFactory(
+    private val pubDao: PubDao
+) : ViewModelProvider.Factory {
+
+    override fun <T : ViewModel> create(modelClass: Class<T>): T {
+        if (modelClass.isAssignableFrom(EntryViewModel::class.java)) {
+            @Suppress("UNCHECKED_CAST")
+            return EntryViewModel(pubDao) as T
+        }
+        throw IllegalArgumentException("Unknown ViewModel class")
     }
 
 }
