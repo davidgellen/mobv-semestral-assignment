@@ -4,9 +4,6 @@ import androidx.lifecycle.*
 import com.example.cv2.dao.PubDao
 import com.example.cv2.data.entity.Pub
 import com.example.cv2.data.jsonmapper.Entry
-import com.example.cv2.data.jsonmapper.EntryDatasourceWrapper
-import com.example.cv2.data.request.PubsRequestBody
-import com.example.cv2.service.RetrofitApi
 import kotlinx.coroutines.launch
 
 class EntryViewModel(

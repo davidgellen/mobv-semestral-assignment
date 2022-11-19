@@ -17,7 +17,7 @@ private val retrofit = Retrofit.Builder()
     .baseUrl(BASE_URL)
     .build()
 
-interface RetrofitApiService {
+interface PubService {
 
     @Headers(
         "api-key: KHUu1Fo8042UwzczKz9nNeuVOsg2T4ClIfhndD2Su0G0LHHCBf0LnUF05L231J0M",
@@ -31,8 +31,8 @@ interface RetrofitApiService {
     suspend fun getTestData(): String
 }
 
-object RetrofitApi {
-    val retrofitService: RetrofitApiService by lazy{
-        retrofit.create(RetrofitApiService::class.java)
+object RetrofitPubApi {
+    val RETROFIT_SERVICE: PubService by lazy{
+        retrofit.create(PubService::class.java)
     }
 }

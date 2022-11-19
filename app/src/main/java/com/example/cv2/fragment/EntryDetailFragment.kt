@@ -1,4 +1,4 @@
-package com.example.cv2
+package com.example.cv2.fragment
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -9,6 +9,7 @@ import android.widget.ImageButton
 import android.widget.TextView
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import com.example.cv2.R
 import com.example.cv2.data.jsonmapper.Entry
 import com.example.cv2.data.model.EntryViewModel
 

@@ -3,11 +3,11 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/app_nav"
-    app:startDestination="@id/allEntriesFragment">
+    app:startDestination="@id/registerFragment">
 
     <fragment
         android:id="@+id/entryInfo"
-        android:name="com.example.cv2.EntryInfo"
+        android:name="com.example.cv2.fragment.EntryInfo"
         android:label="fragment_entry_info"
         tools:layout="@layout/fragment_entry_info" >
         <argument
@@ -28,7 +28,7 @@
     </fragment>
     <fragment
         android:id="@+id/addNewEntry"
-        android:name="com.example.cv2.AddNewEntry"
+        android:name="com.example.cv2.fragment.AddNewEntry"
         android:label="fragment_add_new_entry"
         tools:layout="@layout/fragment_add_new_entry" >
         <action
@@ -37,7 +37,7 @@
     </fragment>
     <fragment
         android:id="@+id/allEntriesFragment"
-        android:name="com.example.cv2.AllEntriesFragment"
+        android:name="com.example.cv2.fragment.AllEntriesFragment"
         android:label="fragment_all_entries"
         tools:layout="@layout/fragment_all_entries" >
         <action
@@ -49,11 +49,29 @@
     </fragment>
     <fragment
         android:id="@+id/entryDetailFragment"
-        android:name="com.example.cv2.EntryDetailFragment"
+        android:name="com.example.cv2.fragment.EntryDetailFragment"
         android:label="fragment_entry_detail"
         tools:layout="@layout/fragment_entry_detail" >
         <action
             android:id="@+id/action_entryDetailFragment_to_allEntriesFragment"
             app:destination="@id/allEntriesFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/registerFragment"
+        android:name="com.example.cv2.RegisterFragment"
+        android:label="fragment_register"
+        tools:layout="@layout/fragment_register" >
+        <action
+            android:id="@+id/action_registerFragment_to_loginFragment"
+            app:destination="@id/loginFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/loginFragment"
+        android:name="com.example.cv2.LoginFragment"
+        android:label="fragment_login"
+        tools:layout="@layout/fragment_login" >
+        <action
+            android:id="@+id/action_loginFragment_to_registerFragment"
+            app:destination="@id/registerFragment" />
     </fragment>
 </navigation>

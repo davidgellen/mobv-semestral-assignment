@@ -1,35 +1,27 @@
-package com.example.cv2
+package com.example.cv2.fragment
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageButton
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.fragment.app.viewModels
-import androidx.lifecycle.Observer
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
+import com.example.cv2.R
 import com.example.cv2.adapter.EntryAdapter
 import com.example.cv2.application.PubApplication
-import com.example.cv2.dao.PubDao
-import com.example.cv2.data.entity.Pub
 import com.example.cv2.data.jsonmapper.Entry
 import com.example.cv2.data.jsonmapper.EntryDatasourceWrapper
 import com.example.cv2.data.model.EntryViewModel
 import com.example.cv2.data.model.PubViewModelFactory
 import com.example.cv2.data.request.PubsRequestBody
 import com.example.cv2.mapper.EntryToPubMapper
-import com.example.cv2.service.RetrofitApi
+import com.example.cv2.service.RetrofitPubApi
 import com.google.gson.GsonBuilder
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import java.io.IOException
 import java.io.InputStream
 
@@ -88,7 +80,7 @@ class AllEntriesFragment : Fragment() {
 
     private suspend fun loadJsonFromServer(): List<Entry> {
         val requestBody = PubsRequestBody("bars", "mobvapp", "Cluster0")
-        val entries: EntryDatasourceWrapper = RetrofitApi.retrofitService.getData(requestBody)
+        val entries: EntryDatasourceWrapper = RetrofitPubApi.RETROFIT_SERVICE.getData(requestBody)
         return entries.documents
     }
 
