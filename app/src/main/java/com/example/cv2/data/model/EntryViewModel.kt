@@ -36,17 +36,17 @@ class EntryViewModel(
         pubDao.getAll()
     }
 
-    private fun getNewPubEntry(
-        importedId: Long,
-        lat: Double,
-        lon: Double
-    ): Pub {
-        return Pub(
-            importedId = importedId,
-            lat = lat,
-            lon = lon
-        )
-    }
+//    private fun getNewPubEntry(
+//        importedId: Long,
+//        lat: Double,
+//        lon: Double
+//    ): Pub {
+//        return Pub(
+//            importedId = importedId,
+//            lat = lat,
+//            lon = lon
+//        )
+//    }
 
 }
 

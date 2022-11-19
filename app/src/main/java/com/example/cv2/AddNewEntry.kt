@@ -32,7 +32,7 @@ class AddNewEntry : Fragment() {
             val lon = (view.findViewById(R.id.longtitudeTextField) as EditText).text.toString().toFloat()
 
             // adds to list of entries
-            val newEntry = Entry(null, lat, lon,
+            val newEntry = Entry(null, lat.toDouble(), lon.toDouble(),
                 Tag(businessName, null, null, null, null, null, null, null))
             entryViewModel.entries.value?.add(0, newEntry)
 

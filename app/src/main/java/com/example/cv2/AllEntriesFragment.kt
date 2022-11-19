@@ -22,6 +22,7 @@ import com.example.cv2.data.jsonmapper.EntryDatasourceWrapper
 import com.example.cv2.data.model.EntryViewModel
 import com.example.cv2.data.model.PubViewModelFactory
 import com.example.cv2.data.request.PubsRequestBody
+import com.example.cv2.mapper.EntryToPubMapper
 import com.example.cv2.service.RetrofitApi
 import com.google.gson.GsonBuilder
 import kotlinx.coroutines.Dispatchers
@@ -52,16 +53,22 @@ class AllEntriesFragment : Fragment() {
         val recyclerView = view.findViewById<RecyclerView>(R.id.enttries_recycle_view)
         recyclerView.adapter = entryViewModel.entries.value?.let { EntryAdapter(view, it) }
 
-        val pub: Pub = Pub(0, 124, 20.3, 20.4)
-        val kktkot = entryViewModel.insertPub(pub)
+//        val pub: Pub = Pub(0, 124, 20.3, 20.4)
+//        val kktkot = entryViewModel.insertPub(pub)
         val stuff = entryViewModel.getAllEntries()
+        val entryToPubMapper = EntryToPubMapper()
 
-        GlobalScope.launch{
+        GlobalScope.launch {
             if (entryViewModel.entries.value?.size ?: 0 == 0) {
                 val fetchedEntries = loadJsonFromServer().toMutableList()
+//                val pubs = entryToPubMapper.entryListToPubList(fetchedEntries)
+//                for (pub in pubs) {
+//                    entryViewModel.insertPub(pub)
+//                }
                 activity?.runOnUiThread {
                     entryViewModel.setEntries(fetchedEntries)
-                    recyclerView.adapter = entryViewModel.entries.value?.let { EntryAdapter(view, it) }
+                    recyclerView.adapter =
+                        entryViewModel.entries.value?.let { EntryAdapter(view, it) }
                 }
             }
         }

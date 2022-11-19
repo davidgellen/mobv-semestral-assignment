@@ -4,8 +4,8 @@ import java.io.Serializable
 
 class Entry(
     val id: Long?,
-    val lat: Float,
-    val lon: Float,
+    val lat: Double?,
+    val lon: Double?,
     val tags: Tag
 ) : Serializable {
 }
