@@ -30,7 +30,15 @@ interface UserService {
         "Cache-Control: no-cache",
         "x-apikey: $API_KEY")
     @POST("create.php")
-    suspend fun create(@Body requestBody: RegisterRequestBody): RegisterResponseBody
+    suspend fun register(@Body requestBody: RegisterRequestBody): RegisterResponseBody
+
+    @Headers(
+        "Accept: application/json",
+        "Content-Type: application/json",
+        "Cache-Control: no-cache",
+        "x-apikey: $API_KEY")
+    @POST("login.php")
+    suspend fun login(@Body requestBody: RegisterRequestBody): RegisterResponseBody
 
 }
 
