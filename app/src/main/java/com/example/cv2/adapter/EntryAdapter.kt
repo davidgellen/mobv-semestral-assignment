@@ -34,10 +34,6 @@ class EntryAdapter(
         holder.textView.text = entries[position].tags.name
     }
 
-    fun kokot() {
-        this.notifyDataSetChanged();
-    }
-
     override fun getItemCount(): Int {
         return entries.size
     }

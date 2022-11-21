@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/app_nav"
-    app:startDestination="@id/registerFragment">
+    app:startDestination="@id/loginFragment">
 
     <fragment
         android:id="@+id/entryInfo"
@@ -73,5 +73,13 @@
         <action
             android:id="@+id/action_loginFragment_to_registerFragment"
             app:destination="@id/registerFragment" />
+        <action
+            android:id="@+id/action_loginFragment_to_allFriendsFragment"
+            app:destination="@id/allFriendsFragment" />
     </fragment>
+    <fragment
+        android:id="@+id/allFriendsFragment"
+        android:name="com.example.cv2.AllFriendsFragment"
+        android:label="fragment_all_friends"
+        tools:layout="@layout/fragment_all_friends" />
 </navigation>

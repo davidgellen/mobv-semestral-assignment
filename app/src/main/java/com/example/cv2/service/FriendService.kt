@@ -1,16 +1,16 @@
 package com.example.cv2.service
 
-import com.example.cv2.data.request.RegisterRequestBody
+import com.example.cv2.data.response.AddFriendResponseBody
 import com.example.cv2.data.response.RegisterResponseBody
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.converter.scalars.ScalarsConverterFactory
-import retrofit2.http.Body
-import retrofit2.http.Headers
-import retrofit2.http.POST
+import retrofit2.http.*
 
-private const val BASE_URL = "https://zadanie.mpage.sk/user/"
+private const val BASE_URL = "https://zadanie.mpage.sk/contact/"
 private const val API_KEY = "c95332ee022df8c953ce470261efc695ecf3e784"
+
+// TODO: global api key
 
 private val retrofit = Retrofit.Builder()
     .addConverterFactory(ScalarsConverterFactory.create())
@@ -18,29 +18,32 @@ private val retrofit = Retrofit.Builder()
     .baseUrl(BASE_URL)
     .build()
 
-
-interface UserService {
-
-    @Headers(
-        "Accept: application/json",
-        "Content-Type: application/json",
-        "Cache-Control: no-cache",
-        "x-apikey: $API_KEY")
-    @POST("create.php")
-    suspend fun register(@Body requestBody: RegisterRequestBody): RegisterResponseBody
+interface FriendService {
 
     @Headers(
         "Accept: application/json",
         "Content-Type: application/json",
         "Cache-Control: no-cache",
         "x-apikey: $API_KEY")
-    @POST("login.php")
-    suspend fun login(@Body requestBody: RegisterRequestBody): RegisterResponseBody
+    @GET("list.php")
+    suspend fun allFriends(@Header("authorization") accessToken: String,
+                           @Header("x-user") uid: String): String
+//    suspend fun allFriends(@HeaderMap headers: Map<String, String>): String
+
+
+    @Headers(
+        "Accept: application/json",
+        "Content-Type: application/json",
+        "Cache-Control: no-cache",
+        "x-apikey: $API_KEY")
+    @POST("message.php")
+    suspend fun addFriend(@Header("authorization") accessToken: String,
+                          @Header("x-user") uid: String): AddFriendResponseBody
 
 }
 
-object RetrofitUserApi {
-    val RETROFIT_SERVICE: UserService by lazy {
-        retrofit.create(UserService::class.java)
+object RetrofitFriendApi {
+    val RETOROFIT_SERVICE: FriendService by lazy {
+        retrofit.create(FriendService::class.java)
     }
 }

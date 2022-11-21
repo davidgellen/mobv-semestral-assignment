@@ -15,6 +15,7 @@ import com.example.cv2.data.response.RegisterResponseBody
 import com.example.cv2.databinding.FragmentLoginBinding
 import com.example.cv2.service.RetrofitUserApi
 import kotlinx.coroutines.DelicateCoroutinesApi
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
@@ -40,16 +41,12 @@ class LoginFragment : Fragment() {
 
     @DelicateCoroutinesApi
     fun login() {
-        GlobalScope.launch {
+        GlobalScope.launch(Dispatchers.Main) {
             val username = binding.loginName
             val password = binding.loginPassword
             val registerBody = RegisterRequestBody(username.text.toString(), password.text.toString())
-            Log.i("login body", registerBody.toString())
             val response: RegisterResponseBody =
                 RetrofitUserApi.RETROFIT_SERVICE.login(registerBody)
-            Log.i("uid", response.uid)
-            Log.i("username", username.toString())
-            Log.i("refresh", password.toString())
             if (response.uid.toInt() == -1) {
                 activity?.runOnUiThread {
                     Toast.makeText(
@@ -76,6 +73,7 @@ class LoginFragment : Fragment() {
                         Toast.LENGTH_SHORT
                     ).show()
                 }
+                findNavController().navigate(R.id.action_loginFragment_to_allFriendsFragment)
             }
         }
     }

@@ -45,12 +45,8 @@ class RegisterFragment : Fragment() {
             val username = binding.registerName
             val password = binding.registerPassword
             val registerBody = RegisterRequestBody(username.text.toString(), password.text.toString())
-            Log.i("reg body", registerBody.toString())
             val response: RegisterResponseBody =
                 RetrofitUserApi.RETROFIT_SERVICE.register(registerBody)
-            Log.i("uid", response.uid)
-            Log.i("access", response.access)
-            Log.i("refresh", response.refresh)
             if (response.uid.toInt() == -1) {
                 activity?.runOnUiThread {
                     Toast
