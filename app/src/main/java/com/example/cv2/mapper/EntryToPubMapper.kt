@@ -13,10 +13,10 @@ class EntryToPubMapper {
             importedId = entry.id,
             lat = entry.lat,
             lon = entry.lon,
-            name = entry.tags?.name,
-            openingHours = entry.tags?.opening_hours,
-            website = entry.tags?.website,
-            phone = entry.tags?.phone
+            name = entry.tags.name,
+            openingHours = entry.tags.opening_hours,
+            website = entry.tags.website,
+            phone = entry.tags.phone
         )
     }
 

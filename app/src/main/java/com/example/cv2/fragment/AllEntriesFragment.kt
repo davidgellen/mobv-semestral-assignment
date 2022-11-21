@@ -45,8 +45,6 @@ class AllEntriesFragment : Fragment() {
         val recyclerView = view.findViewById<RecyclerView>(R.id.enttries_recycle_view)
         recyclerView.adapter = entryViewModel.entries.value?.let { EntryAdapter(view, it) }
 
-//        val pub: Pub = Pub(0, 124, 20.3, 20.4)
-//        val kktkot = entryViewModel.insertPub(pub)
         val stuff = entryViewModel.getAllEntries()
         val entryToPubMapper = EntryToPubMapper()
 

@@ -2,6 +2,7 @@ package com.example.cv2.service
 
 import com.example.cv2.data.request.AddFriendRequestBody
 import com.example.cv2.data.response.AddFriendResponseBody
+import com.example.cv2.data.response.ContactResponseBody
 import com.example.cv2.data.response.RegisterResponseBody
 import retrofit2.Call
 import retrofit2.Retrofit
@@ -29,7 +30,7 @@ interface FriendService {
         "x-apikey: $API_KEY")
     @GET("list.php")
     suspend fun allFriends(@Header("authorization") accessToken: String,
-                           @Header("x-user") uid: String): String
+                           @Header("x-user") uid: String): List<ContactResponseBody>
 
     @Headers(
         "Accept: application/json",
