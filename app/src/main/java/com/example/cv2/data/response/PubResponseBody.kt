@@ -10,6 +10,6 @@ data class PubResponseBody(
     @SerializedName("lon") val lon: String? = null,
     @SerializedName("bar_type") val barType: String? = null,
     @SerializedName("users") val users: Long,
-    @SerializedName("last_update") val lastUpdate: Date? = null
+    @SerializedName("last_update") val lastUpdate: String? = null
 ) {
 }

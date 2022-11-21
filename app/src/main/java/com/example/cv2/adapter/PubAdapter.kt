@@ -32,7 +32,8 @@ class PubAdapter(
             bundle.putSerializable("entry", entries[position])
             view.findNavController().navigate(R.id.action_allEntriesFragment_to_entryDetailFragment, bundle)
         }
-        holder.textView.text = entries[position].name
+        val item = entries[position]
+        holder.textView.text = item.name + " (" + item.users + ")"
     }
 
     override fun getItemCount(): Int {

@@ -1,5 +1,6 @@
 package com.example.cv2.fragment
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -12,13 +13,14 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.cv2.R
 import com.example.cv2.adapter.PubAdapter
 import com.example.cv2.application.PubApplication
+import com.example.cv2.data.entity.Pub
 import com.example.cv2.data.jsonmapper.Entry
 import com.example.cv2.data.jsonmapper.EntryDatasourceWrapper
 import com.example.cv2.data.model.PubViewModel
 import com.example.cv2.data.model.PubViewModelFactory
-import com.example.cv2.data.request.PubsRequestBody
-import com.example.cv2.mapper.EntryToPubMapper
-import com.example.cv2.service.RetrofitPubApi
+import com.example.cv2.data.response.PubResponseBody
+import com.example.cv2.mapper.PubMapper
+import com.example.cv2.service.RetrofitNewPubApi
 import com.google.gson.GsonBuilder
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -45,18 +47,14 @@ class AllEntriesFragment : Fragment() {
         val recyclerView = view.findViewById<RecyclerView>(R.id.enttries_recycle_view)
         recyclerView.adapter = pubViewModel.entries.value?.let { PubAdapter(view, it) }
 
-        val stuff = pubViewModel.getAllEntries()
-        val entryToPubMapper = EntryToPubMapper()
+        val entryToPubMapper = PubMapper()
 
         GlobalScope.launch {
             if (pubViewModel.entries.value?.size ?: 0 == 0) {
                 val fetchedEntries = loadJsonFromServer().toMutableList()
-                val pubs = entryToPubMapper.entryListToPubList(fetchedEntries)
-//                for (pub in pubs) {
-//                    entryViewModel.insertPub(pub)
-//                }
+//                val pubs = entryToPubMapper.entryListToPubList(fetchedEntries)
                 activity?.runOnUiThread {
-                    pubViewModel.setEntries(pubs)
+                    pubViewModel.setEntries(fetchedEntries)
                     recyclerView.adapter =
                         pubViewModel.entries.value?.let { PubAdapter(view, it) }
                 }
@@ -72,15 +70,21 @@ class AllEntriesFragment : Fragment() {
         return view
     }
 
-//    companion object {
-//        var globalMutableEntries = mutableListOf<Entry>()
-//    }
-
-    private suspend fun loadJsonFromServer(): List<Entry> {
-        val requestBody = PubsRequestBody("bars", "mobvapp", "Cluster0")
-        val entries: EntryDatasourceWrapper = RetrofitPubApi.RETROFIT_SERVICE.getData(requestBody)
-        return entries.documents
+    private suspend fun loadJsonFromServer(): List<Pub> {
+        val sharedPreference = activity?.applicationContext?.getSharedPreferences(
+            "PREFERENCE_NAME", Context.MODE_PRIVATE)
+        val accessToken = "Bearer " + (sharedPreference?.getString("access", "defaultAccess") ?: "defaultAccess")
+        val uid = sharedPreference?.getString("uid", "defaultUid") ?: "defaultUid"
+        val pubs: MutableList<PubResponseBody> = RetrofitNewPubApi.RETROFIT_SERVICE
+            .getPubsWithPeople(accessToken, uid)
+        return PubMapper().pubResponseListToPubEntityList(pubs)
     }
+
+//    private suspend fun loadJsonFromServer(): List<Entry> {
+//        val requestBody = PubsRequestBody("bars", "mobvapp", "Cluster0")
+//        val entries: EntryDatasourceWrapper = RetrofitPubApi.RETROFIT_SERVICE.getData(requestBody)
+//        return entries.documents
+//    }
 
     private fun loadJson(): List<Entry> {
         try {

@@ -25,7 +25,7 @@ interface NewPubService {
         "x-apikey: $API_KEY")
     @GET("list.php")
     suspend fun getPubsWithPeople(@Header("authorization") accessToken: String,
-                                  @Header("x-user") uid: String): List<PubResponseBody>
+                                  @Header("x-user") uid: String): MutableList<PubResponseBody>
 
 }
 

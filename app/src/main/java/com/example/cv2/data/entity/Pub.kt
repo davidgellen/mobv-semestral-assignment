@@ -16,5 +16,6 @@ data class Pub(
     @ColumnInfo(name = "name") val name: String?,
     @ColumnInfo(name = "openingHours") val openingHours: String?,
     @ColumnInfo(name = "website") val website: String?,
+    @ColumnInfo(name = "users") val users: Long?
 ) : Serializable {
 }
