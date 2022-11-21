@@ -4,6 +4,7 @@ import androidx.annotation.NonNull
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import java.io.Serializable
 
 @Entity
 data class Pub(
@@ -15,5 +16,5 @@ data class Pub(
     @ColumnInfo(name = "name") val name: String?,
     @ColumnInfo(name = "openingHours") val openingHours: String?,
     @ColumnInfo(name = "website") val website: String?,
-) {
+) : Serializable {
 }

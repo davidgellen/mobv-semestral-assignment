@@ -6,17 +6,17 @@ import com.example.cv2.data.entity.Pub
 import com.example.cv2.data.jsonmapper.Entry
 import kotlinx.coroutines.launch
 
-class EntryViewModel(
+class PubViewModel(
     private val pubDao: PubDao
 ) : ViewModel() {
 
-    private var _entries = MutableLiveData<MutableList<Entry>>()
+    private var _entries = MutableLiveData<MutableList<Pub>>()
 
-    val entries: LiveData<MutableList<Entry>>
+    val entries: LiveData<MutableList<Pub>>
         get() = _entries
 
     fun setEntries(
-        list: MutableList<Entry>
+        list: MutableList<Pub>
     ) {
         _entries.value = list
     }
@@ -52,9 +52,9 @@ class PubViewModelFactory(
 ) : ViewModelProvider.Factory {
 
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        if (modelClass.isAssignableFrom(EntryViewModel::class.java)) {
+        if (modelClass.isAssignableFrom(PubViewModel::class.java)) {
             @Suppress("UNCHECKED_CAST")
-            return EntryViewModel(pubDao) as T
+            return PubViewModel(pubDao) as T
         }
         throw IllegalArgumentException("Unknown ViewModel class")
     }

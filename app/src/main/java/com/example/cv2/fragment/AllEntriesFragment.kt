@@ -10,11 +10,11 @@ import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.example.cv2.R
-import com.example.cv2.adapter.EntryAdapter
+import com.example.cv2.adapter.PubAdapter
 import com.example.cv2.application.PubApplication
 import com.example.cv2.data.jsonmapper.Entry
 import com.example.cv2.data.jsonmapper.EntryDatasourceWrapper
-import com.example.cv2.data.model.EntryViewModel
+import com.example.cv2.data.model.PubViewModel
 import com.example.cv2.data.model.PubViewModelFactory
 import com.example.cv2.data.request.PubsRequestBody
 import com.example.cv2.mapper.EntryToPubMapper
@@ -27,7 +27,7 @@ import java.io.InputStream
 
 class AllEntriesFragment : Fragment() {
 
-    private val entryViewModel: EntryViewModel by activityViewModels() {
+    private val pubViewModel: PubViewModel by activityViewModels() {
         PubViewModelFactory(
             (activity?.application as PubApplication).database.pubDao()
         )
@@ -43,22 +43,22 @@ class AllEntriesFragment : Fragment() {
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_all_entries, container, false)
         val recyclerView = view.findViewById<RecyclerView>(R.id.enttries_recycle_view)
-        recyclerView.adapter = entryViewModel.entries.value?.let { EntryAdapter(view, it) }
+        recyclerView.adapter = pubViewModel.entries.value?.let { PubAdapter(view, it) }
 
-        val stuff = entryViewModel.getAllEntries()
+        val stuff = pubViewModel.getAllEntries()
         val entryToPubMapper = EntryToPubMapper()
 
         GlobalScope.launch {
-            if (entryViewModel.entries.value?.size ?: 0 == 0) {
+            if (pubViewModel.entries.value?.size ?: 0 == 0) {
                 val fetchedEntries = loadJsonFromServer().toMutableList()
-//                val pubs = entryToPubMapper.entryListToPubList(fetchedEntries)
+                val pubs = entryToPubMapper.entryListToPubList(fetchedEntries)
 //                for (pub in pubs) {
 //                    entryViewModel.insertPub(pub)
 //                }
                 activity?.runOnUiThread {
-                    entryViewModel.setEntries(fetchedEntries)
+                    pubViewModel.setEntries(pubs)
                     recyclerView.adapter =
-                        entryViewModel.entries.value?.let { EntryAdapter(view, it) }
+                        pubViewModel.entries.value?.let { PubAdapter(view, it) }
                 }
             }
         }
@@ -66,8 +66,8 @@ class AllEntriesFragment : Fragment() {
             findNavController().navigate(R.id.action_allEntriesFragment_to_addNewEntry)
         }
         view.findViewById<ImageButton>(R.id.sortEntriesButton).setOnClickListener {
-            entryViewModel.entries.value?.sortBy { it.tags.name }
-            (recyclerView.adapter as EntryAdapter).notifyDataSetChanged()
+            pubViewModel.entries.value?.sortBy { it.name }
+            (recyclerView.adapter as PubAdapter).notifyDataSetChanged()
         }
         return view
     }

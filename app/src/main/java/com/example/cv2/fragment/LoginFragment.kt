@@ -66,7 +66,7 @@ class LoginFragment : Fragment() {
                 editor?.putString("access", response.access)
                 editor?.putString("refresh", response.refresh)
                 editor?.apply()
-                findNavController().navigate(R.id.action_loginFragment_to_allFriendsFragment)
+                findNavController().navigate(R.id.action_loginFragment_to_homeScreenFragment)
             }
         }
     }

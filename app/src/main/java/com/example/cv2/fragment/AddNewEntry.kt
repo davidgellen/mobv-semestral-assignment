@@ -12,11 +12,11 @@ import androidx.navigation.fragment.findNavController
 import com.example.cv2.R
 import com.example.cv2.data.jsonmapper.Entry
 import com.example.cv2.data.jsonmapper.Tag
-import com.example.cv2.data.model.EntryViewModel
+import com.example.cv2.data.model.PubViewModel
 
 class AddNewEntry : Fragment() {
 
-    private val entryViewModel: EntryViewModel by viewModels()
+    private val pubViewModel: PubViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -32,10 +32,10 @@ class AddNewEntry : Fragment() {
             val lat = (view.findViewById(R.id.lattitudeTextField) as EditText).text.toString().toFloat()
             val lon = (view.findViewById(R.id.longtitudeTextField) as EditText).text.toString().toFloat()
 
-            // adds to list of entries
-            val newEntry = Entry(null, lat.toDouble(), lon.toDouble(),
-                Tag(businessName, null, null, null, null, null, null, null))
-            entryViewModel.entries.value?.add(0, newEntry)
+            // adds to list of entries TODO: remove/change to Pub
+//            val newEntry = Entry(null, lat.toDouble(), lon.toDouble(),
+//                Tag(businessName, null, null, null, null, null, null, null))
+//            pubViewModel.entries.value?.add(0, newEntry)
 
             // args for next fragment
             val bundle = Bundle()

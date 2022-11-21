@@ -10,7 +10,6 @@ import android.view.ViewGroup
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.example.cv2.adapter.ContactAdapter
-import com.example.cv2.adapter.EntryAdapter
 import com.example.cv2.data.entity.Contact
 import com.example.cv2.data.response.ContactResponseBody
 import com.example.cv2.databinding.FragmentAllFriendsBinding

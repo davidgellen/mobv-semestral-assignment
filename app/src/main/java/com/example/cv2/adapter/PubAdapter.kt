@@ -8,12 +8,13 @@ import android.widget.TextView
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.example.cv2.R
+import com.example.cv2.data.entity.Pub
 import com.example.cv2.data.jsonmapper.Entry
 
-class EntryAdapter(
+class PubAdapter(
     private val context: View,
-    private val entries: MutableList<Entry>,
-) : RecyclerView.Adapter<EntryAdapter.EntryViewHolder>(){
+    private val entries: MutableList<Pub>,
+) : RecyclerView.Adapter<PubAdapter.EntryViewHolder>(){
 
     class EntryViewHolder(private val view: View) : RecyclerView.ViewHolder(view) {
         val textView: TextView = view.findViewById(R.id.entry_title)
@@ -31,7 +32,7 @@ class EntryAdapter(
             bundle.putSerializable("entry", entries[position])
             view.findNavController().navigate(R.id.action_allEntriesFragment_to_entryDetailFragment, bundle)
         }
-        holder.textView.text = entries[position].tags.name
+        holder.textView.text = entries[position].name
     }
 
     override fun getItemCount(): Int {

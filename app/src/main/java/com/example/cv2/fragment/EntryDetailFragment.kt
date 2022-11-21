@@ -10,12 +10,13 @@ import android.widget.TextView
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.example.cv2.R
+import com.example.cv2.data.entity.Pub
 import com.example.cv2.data.jsonmapper.Entry
-import com.example.cv2.data.model.EntryViewModel
+import com.example.cv2.data.model.PubViewModel
 
 class EntryDetailFragment : Fragment() {
 
-    private val entryViewModel: EntryViewModel by viewModels()
+    private val pubViewModel: PubViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -23,13 +24,13 @@ class EntryDetailFragment : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_entry_detail, container, false)
-        val entry: Entry = arguments?.getSerializable("entry") as Entry
-        view.findViewById<TextView>(R.id.detailNameTextView).text = entry.tags.name
-        view.findViewById<TextView>(R.id.detailOpeningHours).text = "Hodiny: " + mapNullStringToEmpty(entry.tags.opening_hours)
-        view.findViewById<TextView>(R.id.detailCity).text = "Adresa: " + createAddress(entry.tags.street,entry.tags.houseNumber, entry.tags.city, entry.tags.country)
-        view.findViewById<TextView>(R.id.editWebsite).text = "Stranka: " + mapNullStringToEmpty(entry.tags.website)
+        val pub: Pub = arguments?.getSerializable("entry") as Pub
+//        view.findViewById<TextView>(R.id.detailNameTextView).text = pub.name
+//        view.findViewById<TextView>(R.id.detailOpeningHours).text = "Hodiny: " + mapNullStringToEmpty(pub.tags.opening_hours)
+//        view.findViewById<TextView>(R.id.detailCity).text = "Adresa: " + createAddress(pub.tags.street,pub.tags.houseNumber, pub.tags.city, pub.tags.country)
+//        view.findViewById<TextView>(R.id.editWebsite).text = "Stranka: " + mapNullStringToEmpty(pub.tags.website)
         view.findViewById<ImageButton>(R.id.editDeleteCurrent).setOnClickListener {
-            entryViewModel.entries.value?.remove(entry)
+//            pubViewModel.entries.value?.remove(entry) TODO: fix deleting
             findNavController().navigate(R.id.action_entryDetailFragment_to_allEntriesFragment)
         }
         return view
