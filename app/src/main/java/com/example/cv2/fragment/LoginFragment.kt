@@ -66,13 +66,6 @@ class LoginFragment : Fragment() {
                 editor?.putString("access", response.access)
                 editor?.putString("refresh", response.refresh)
                 editor?.apply()
-                activity?.runOnUiThread {
-                    Toast.makeText(
-                        activity?.applicationContext,
-                        "SI SA PRIHLASIL TY PACMAGA",
-                        Toast.LENGTH_SHORT
-                    ).show()
-                }
                 findNavController().navigate(R.id.action_loginFragment_to_allFriendsFragment)
             }
         }

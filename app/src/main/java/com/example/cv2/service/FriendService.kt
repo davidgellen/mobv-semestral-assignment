@@ -1,7 +1,9 @@
 package com.example.cv2.service
 
+import com.example.cv2.data.request.AddFriendRequestBody
 import com.example.cv2.data.response.AddFriendResponseBody
 import com.example.cv2.data.response.RegisterResponseBody
+import retrofit2.Call
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.converter.scalars.ScalarsConverterFactory
@@ -28,8 +30,6 @@ interface FriendService {
     @GET("list.php")
     suspend fun allFriends(@Header("authorization") accessToken: String,
                            @Header("x-user") uid: String): String
-//    suspend fun allFriends(@HeaderMap headers: Map<String, String>): String
-
 
     @Headers(
         "Accept: application/json",
@@ -38,7 +38,8 @@ interface FriendService {
         "x-apikey: $API_KEY")
     @POST("message.php")
     suspend fun addFriend(@Header("authorization") accessToken: String,
-                          @Header("x-user") uid: String): AddFriendResponseBody
+                          @Header("x-user") uid: String,
+                          @Body requestBody: AddFriendRequestBody): String
 
 }
 

@@ -7,6 +7,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.navigation.fragment.findNavController
 import com.example.cv2.databinding.FragmentAllFriendsBinding
 import com.example.cv2.service.RetrofitFriendApi
 import kotlinx.coroutines.DelicateCoroutinesApi
@@ -26,15 +27,9 @@ class AllFriendsFragment : Fragment() {
         binding = FragmentAllFriendsBinding.inflate(inflater, container, false)
         val view: View = binding.root
         fetchAllFriends()
+
         binding.addNewFriendButton.setOnClickListener {
-            // TODO: action to add friend fragment
-            val sharedPreference = activity?.applicationContext?.getSharedPreferences(
-                "PREFERENCE_NAME", Context.MODE_PRIVATE)
-            Log.i("TODO", "ACTION TO ADD FRIEND FRAGMENT")
-            val accessToken = sharedPreference?.getString("access", "defaultAccess") ?: "defaultAccess"
-            val uid = sharedPreference?.getString("uid", "defaultUid") ?: "defaultUid"
-            Log.i("uid", uid)
-            Log.i("accessToken", accessToken)
+            findNavController().navigate(R.id.action_allFriendsFragment_to_addFriendFragment)
         }
 
         return view
@@ -56,22 +51,5 @@ class AllFriendsFragment : Fragment() {
             Log.i("response", response)
         }
     }
-
-    fun createHeadersForService() : Map<String, String> {
-        val sharedPreference = activity?.applicationContext?.getSharedPreferences(
-            "PREFERENCE_NAME", Context.MODE_PRIVATE)
-        val accessToken = sharedPreference?.getString("access", "defaultAccess") ?: "defaultAccess"
-        val uid = sharedPreference?.getString("uid", "defaultUid") ?: "defaultUid"
-        val map = mapOf(
-            "Accept" to "application/json",
-            "Content-Type" to "application/json",
-            "Cache-Control" to "no-cache",
-            "x-apikey" to "c95332ee022df8c953ce470261efc695ecf3e784",
-            "x-user" to uid,
-            "authorization" to "Bearer ")
-//        map.
-        return map
-    }
-
 
 }
