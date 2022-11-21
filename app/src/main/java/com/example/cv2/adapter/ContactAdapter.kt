@@ -1,6 +1,7 @@
 package com.example.cv2.adapter
 
 import android.content.Context
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -25,11 +26,9 @@ class ContactAdapter(
     }
 
     override fun onBindViewHolder(holder: ContactViewHolder, position: Int) {
-//        holder.itemView.setOnClickListener{ view ->
-//            val bundle = Bundle()
-//            bundle.putSerializable("entry", entries[position])
-//            view.findNavController().navigate(R.id.action_allEntriesFragment_to_entryDetailFragment, bundle)
-//        }
+        holder.itemView.setOnClickListener { view ->
+            Log.i("TODO", "ZOBRAZ DETAIL PODNIKU")
+        }
         holder.textView.text = contacts[position].contactName
     }
 
