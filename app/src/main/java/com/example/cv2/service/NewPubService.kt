@@ -1,5 +1,7 @@
 package com.example.cv2.service
 
+import com.example.cv2.data.request.CheckIntoPubRequestBody
+import com.example.cv2.data.request.RegisterRequestBody
 import com.example.cv2.data.response.PubResponseBody
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -46,6 +48,16 @@ interface NewPubService {
     @GET("list.php")
     suspend fun getPubsWithPeople(@Header("authorization") accessToken: String,
                                   @Header("x-user") uid: String): MutableList<PubResponseBody>
+
+    @Headers(
+        "Accept: application/json",
+        "Content-Type: application/json",
+        "Cache-Control: no-cache",
+        "x-apikey: $API_KEY")
+    @POST("message.php")
+    suspend fun checkIntoPub(@Header("authorization") accessToken: String,
+                             @Header("x-user") uid: String,
+                             @Body requestBody: CheckIntoPubRequestBody): String
 }
 
 object RetrofitNewPubApi {

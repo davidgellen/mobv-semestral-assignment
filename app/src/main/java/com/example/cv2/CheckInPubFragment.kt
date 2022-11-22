@@ -1,6 +1,7 @@
 package com.example.cv2
 
 import android.Manifest
+import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
@@ -13,8 +14,13 @@ import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
 import androidx.core.app.ActivityCompat
+import com.example.cv2.adapter.CheckInPubAdapter
+import com.example.cv2.adapter.ContactAdapter
+import com.example.cv2.data.request.CheckIntoPubRequestBody
+import com.example.cv2.data.response.PubResponseBody
 import com.example.cv2.databinding.FragmentCheckInPubBinding
 import com.example.cv2.mapper.PubMapper
+import com.example.cv2.service.RetrofitNewPubApi
 import com.example.cv2.service.RetrofitOverpassApi
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
@@ -34,7 +40,6 @@ class CheckInPubFragment : Fragment() {
     @RequiresApi(Build.VERSION_CODES.N)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-//        fetchLocation()
 
     }
 
@@ -48,6 +53,10 @@ class CheckInPubFragment : Fragment() {
         fusedLocationProviderClient = activity?.let {
             LocationServices.getFusedLocationProviderClient(it)
         }!!
+
+        val recyclerView = binding.checkInRecyclerView
+        recyclerView.adapter =
+            activity?.applicationContext?.let { CheckInPubAdapter(it, mutableListOf(), binding.chosenPubToCheckIn) }
 
         fetchLocation()
 
@@ -75,9 +84,32 @@ class CheckInPubFragment : Fragment() {
             Log.i("fetched pubs", pubsResponse.elements.size.toString())
 
             val pubs = PubMapper().entryListToPubList(pubsResponse.elements.toMutableList())
-
-
             // TODO: default sort by distance from me
+
+            val recyclerView = binding.checkInRecyclerView
+            recyclerView.adapter =
+                activity?.applicationContext?.let { CheckInPubAdapter(it, pubs, binding.chosenPubToCheckIn) }
+
+            binding.animationView4.setOnClickListener {
+                val pub = (binding.checkInRecyclerView.adapter as CheckInPubAdapter).getPub()
+                if (pub == null) {
+                    activity?.runOnUiThread {
+                        Toast.makeText( activity?.applicationContext, "ZIADNY PODNIK NENI ZVOLENY", Toast.LENGTH_SHORT).show()
+                    }
+                } else {
+                    GlobalScope.launch {
+                        val sharedPreference = activity?.applicationContext?.getSharedPreferences(
+                            "PREFERENCE_NAME", Context.MODE_PRIVATE)
+                        val accessToken = "Bearer " + (sharedPreference?.getString("access", "defaultAccess") ?: "defaultAccess")
+                        val uid = sharedPreference?.getString("uid", "defaultUid") ?: "defaultUid"
+                        val body = CheckIntoPubRequestBody(pub.importedId.toString(), pub.name!!, "node", pub.lat!!, pub.lon!!)
+                        val pubs = RetrofitNewPubApi.RETROFIT_SERVICE
+                            .checkIntoPub(accessToken, uid, body)
+                        Log.e("KOKOT", "PICA")
+                    }
+                }
+            }
+
         }
     }
 

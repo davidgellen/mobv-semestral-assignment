@@ -9,7 +9,6 @@ import androidx.navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.example.cv2.R
 import com.example.cv2.data.entity.Pub
-import com.example.cv2.data.jsonmapper.Entry
 
 class PubAdapter(
     private val context: View,
