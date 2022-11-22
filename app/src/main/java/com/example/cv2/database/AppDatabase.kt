@@ -28,7 +28,6 @@ abstract class AppDatabase : RoomDatabase() {
                     .allowMainThreadQueries()
                     .fallbackToDestructiveMigration()
                     .build()
-                Log.e("LOL", "DO MATERINEJ PICE")
                 INSTANCE = instance
                 instance
             }
