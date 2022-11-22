@@ -79,7 +79,7 @@
     </fragment>
     <fragment
         android:id="@+id/allFriendsFragment"
-        android:name="com.example.cv2.AllFriendsFragment"
+        android:name="com.example.cv2.fragment.AllFriendsFragment"
         android:label="fragment_all_friends"
         tools:layout="@layout/fragment_all_friends" >
         <action
@@ -88,7 +88,7 @@
     </fragment>
     <fragment
         android:id="@+id/addFriendFragment"
-        android:name="com.example.cv2.AddFriendFragment"
+        android:name="com.example.cv2.fragment.AddFriendFragment"
         android:label="fragment_add_friend"
         tools:layout="@layout/fragment_add_friend" >
         <action
@@ -97,7 +97,7 @@
     </fragment>
     <fragment
         android:id="@+id/homeScreenFragment"
-        android:name="com.example.cv2.HomeScreenFragment"
+        android:name="com.example.cv2.fragment.HomeScreenFragment"
         android:label="fragment_home_screen"
         tools:layout="@layout/fragment_home_screen" >
         <action
@@ -106,5 +106,13 @@
         <action
             android:id="@+id/action_homeScreenFragment_to_allFriendsFragment"
             app:destination="@id/allFriendsFragment" />
+        <action
+            android:id="@+id/action_homeScreenFragment_to_checkInPubFragment"
+            app:destination="@id/checkInPubFragment" />
     </fragment>
+    <fragment
+        android:id="@+id/checkInPubFragment"
+        android:name="com.example.cv2.CheckInPubFragment"
+        android:label="fragment_check_in_pub"
+        tools:layout="@layout/fragment_check_in_pub" />
 </navigation>

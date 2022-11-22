@@ -1,4 +1,4 @@
-package com.example.cv2
+package com.example.cv2.fragment
 
 import android.content.Context
 import android.os.Bundle
@@ -9,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
+import com.example.cv2.R
 import com.example.cv2.adapter.ContactAdapter
 import com.example.cv2.data.entity.Contact
 import com.example.cv2.data.response.ContactResponseBody

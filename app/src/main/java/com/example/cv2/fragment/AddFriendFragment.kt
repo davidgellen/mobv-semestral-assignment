@@ -1,4 +1,4 @@
-package com.example.cv2
+package com.example.cv2.fragment
 
 import android.content.Context
 import android.os.Bundle
@@ -9,17 +9,14 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.navigation.fragment.findNavController
+import com.example.cv2.R
 import com.example.cv2.data.request.AddFriendRequestBody
-import com.example.cv2.data.response.AddFriendResponseBody
 import com.example.cv2.databinding.FragmentAddFriendBinding
 import com.example.cv2.service.RetrofitFriendApi
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 
 class AddFriendFragment : Fragment() {
 

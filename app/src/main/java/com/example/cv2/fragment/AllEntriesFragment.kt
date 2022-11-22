@@ -92,7 +92,7 @@ class AllEntriesFragment : Fragment() {
             val json = inputStream.bufferedReader().use { it.readText() }
             val allEntries = GsonBuilder().create()
                 .fromJson(json, EntryDatasourceWrapper::class.java)
-            return allEntries.documents
+            return allEntries.elements
         } catch (e: IOException) {
             e.printStackTrace()
         }
