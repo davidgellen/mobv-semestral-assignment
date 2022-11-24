@@ -2,6 +2,7 @@ package com.example.cv2.fragment
 
 import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -52,25 +53,12 @@ class AllEntriesFragment : Fragment() {
         val recyclerView = binding.enttriesRecycleView
         recyclerView.adapter = pubViewModel.entries.value?.let { PubAdapter(view, it) }
 
-        val entryToPubMapper = PubMapper()
-
         loadData(view)
 
-//        GlobalScope.launch {
-//            if (pubViewModel.entries.value?.size ?: 0 == 0) {
-//                val fetchedEntries = loadJsonFromServer().toMutableList()
-////                val pubs = entryToPubMapper.entryListToPubList(fetchedEntries)
-//                activity?.runOnUiThread {
-//                    pubViewModel.setEntries(fetchedEntries)
-//                    recyclerView.adapter =
-//                        pubViewModel.entries.value?.let { PubAdapter(view, it) }
-//                }
-//            }
-//        }
-        view.findViewById<ImageButton>(R.id.toAddEntryButton).setOnClickListener {
+        binding.toAddEntryButton.setOnClickListener {
             findNavController().navigate(R.id.action_allEntriesFragment_to_addNewEntry)
         }
-        view.findViewById<ImageButton>(R.id.sortEntriesButton).setOnClickListener {
+        binding.sortEntriesButton.setOnClickListener {
             pubViewModel.entries.value?.sortBy { it.name }
             (recyclerView.adapter as PubAdapter).notifyDataSetChanged()
         }
@@ -79,14 +67,11 @@ class AllEntriesFragment : Fragment() {
 
     private fun loadData(view: View) {
         GlobalScope.launch {
-            if (pubViewModel.entries.value?.size ?: 0 == 0) {
-                val fetchedEntries = loadJsonFromServer().toMutableList()
-//                val pubs = entryToPubMapper.entryListToPubList(fetchedEntries)
-                activity?.runOnUiThread {
-                    pubViewModel.setEntries(fetchedEntries)
-                    binding.enttriesRecycleView.adapter =
-                        pubViewModel.entries.value?.let { PubAdapter(view, it) }
-                }
+            val fetchedEntries = loadJsonFromServer().toMutableList()
+            activity?.runOnUiThread {
+                pubViewModel.setEntries(fetchedEntries)
+                binding.enttriesRecycleView.adapter =
+                    pubViewModel.entries.value?.let { PubAdapter(view, it) }
             }
         }
     }

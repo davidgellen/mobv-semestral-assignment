@@ -18,7 +18,7 @@ class PubMapper {
             openingHours = entry.tags.opening_hours,
             website = entry.tags.website,
             phone = entry.tags.phone,
-            users = 5678
+            users = 5678,
         )
     }
 

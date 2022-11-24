@@ -18,6 +18,7 @@ import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.example.cv2.adapter.CheckInPubAdapter
+import com.example.cv2.data.entity.Pub
 import com.example.cv2.data.request.CheckIntoPubRequestBody
 import com.example.cv2.databinding.FragmentCheckInPubBinding
 import com.example.cv2.mapper.PubMapper
@@ -29,6 +30,9 @@ import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import java.lang.Math.pow
+import java.math.RoundingMode
+import kotlin.math.*
 
 class CheckInPubFragment : Fragment() {
 
@@ -58,22 +62,15 @@ class CheckInPubFragment : Fragment() {
         recyclerView.adapter =
             activity?.applicationContext?.let { CheckInPubAdapter(it, mutableListOf()) }
 
-        val toolbar = (activity as AppCompatActivity).supportActionBar
-        toolbar?.title = "JOZO"
-        toolbar?.setDisplayHomeAsUpEnabled(true)
-        toolbar?.setDisplayShowHomeEnabled(true)
-        toolbar?.displayOptions
+//        val toolbar = (activity as AppCompatActivity).supportActionBar
+//        toolbar?.title = "JOZO"
+//        toolbar?.setDisplayHomeAsUpEnabled(true)
+//        toolbar?.setDisplayShowHomeEnabled(true)
+//        toolbar?.displayOptions
 
-        fetchLocation()
+        fetchLocation(false)
 
         return view
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        if (item.itemId == android.R.id.home) {
-            Log.i("KOKOT", "KOKOT")
-        }
-        return super.onOptionsItemSelected(item)
     }
 
     @RequiresApi(Build.VERSION_CODES.N)
@@ -97,7 +94,11 @@ class CheckInPubFragment : Fragment() {
             Log.i("fetched pubs", pubsResponse.elements.size.toString())
 
             val pubs = PubMapper().entryListToPubList(pubsResponse.elements.toMutableList())
-            // TODO: default sort by distance from me
+            for (pub in pubs) {
+                val distance = distanceInKm(lat.toDouble(), lon.toDouble(), pub.lat!!, pub.lon!!)
+                pub.distance = distance.toBigDecimal().setScale(3, RoundingMode.UP).toDouble()
+            }
+            pubs.sortBy{ it.distance }
 
             val recyclerView = binding.checkInRecyclerView
             recyclerView.adapter =
@@ -129,17 +130,42 @@ class CheckInPubFragment : Fragment() {
 
     @DelicateCoroutinesApi
     @RequiresApi(Build.VERSION_CODES.N)
-    private fun fetchLocation() {
+    private fun fetchLocation(
+        useFei: Boolean
+    ) {
         val task = fusedLocationProviderClient.lastLocation
         if (context?.let { ActivityCompat.checkSelfPermission(it, Manifest.permission.ACCESS_FINE_LOCATION) } != PackageManager.PERMISSION_GRANTED &&
             context?.let { ActivityCompat.checkSelfPermission(it, Manifest.permission.ACCESS_COARSE_LOCATION) } != PackageManager.PERMISSION_GRANTED) {
             activity?.let { ActivityCompat.requestPermissions(it, arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), 101) }
         }
         task.addOnSuccessListener {
-            lat = it.latitude.toString()
-            lon = it.longitude.toString()
+            if (useFei) {
+                lat = "48.143483"
+                lon = "17.108513"
+            } else {
+                lat = it.latitude.toString()
+                lon = it.longitude.toString()
+            }
             loadPubsInArea()
         }
+    }
+
+    fun distanceInKm(lat1: Double, lon1: Double, lat2: Double, lon2: Double): Double {
+        val theta = lon1 - lon2
+        var dist = Math.sin(deg2rad(lat1)) * Math.sin(deg2rad(lat2)) + Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) * Math.cos(deg2rad(theta))
+        dist = Math.acos(dist)
+        dist = rad2deg(dist)
+        dist = dist * 60 * 1.1515
+        dist = dist * 1.609344
+        return dist
+    }
+
+    private fun deg2rad(deg: Double): Double {
+        return deg * Math.PI / 180.0
+    }
+
+    private fun rad2deg(rad: Double): Double {
+        return rad * 180.0 / Math.PI
     }
 
 }

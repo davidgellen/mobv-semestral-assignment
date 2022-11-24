@@ -46,7 +46,7 @@ class CheckInPubAdapter(
         } else {
             holder.card.setBackgroundColor(Color.RED)
         }
-        holder.textView.text = item.name
+        holder.textView.text = "${item.name} (${item.distance} km)"
         holder.itemView.setOnClickListener {
             holder.lottieCheckBox.playAnimation()
             currentPub = pubs[position]
