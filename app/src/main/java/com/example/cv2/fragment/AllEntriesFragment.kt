@@ -25,6 +25,7 @@ import com.example.cv2.databinding.FragmentCheckInPubBinding
 import com.example.cv2.mapper.PubMapper
 import com.example.cv2.service.RetrofitNewPubApi
 import com.google.gson.GsonBuilder
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import java.io.IOException
@@ -62,16 +63,20 @@ class AllEntriesFragment : Fragment() {
             pubViewModel.entries.value?.sortBy { it.name }
             (recyclerView.adapter as PubAdapter).notifyDataSetChanged()
         }
+        binding.swipeContainer.setOnRefreshListener {
+            loadData(view)
+        }
         return view
     }
 
     private fun loadData(view: View) {
-        GlobalScope.launch {
+        GlobalScope.launch(Dispatchers.Main) {
             val fetchedEntries = loadJsonFromServer().toMutableList()
             activity?.runOnUiThread {
                 pubViewModel.setEntries(fetchedEntries)
                 binding.enttriesRecycleView.adapter =
                     pubViewModel.entries.value?.let { PubAdapter(view, it) }
+                binding.swipeContainer.isRefreshing = false
             }
         }
     }
