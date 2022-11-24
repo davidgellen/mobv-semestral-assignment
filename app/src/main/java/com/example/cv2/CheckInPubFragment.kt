@@ -24,6 +24,7 @@ import com.example.cv2.databinding.FragmentCheckInPubBinding
 import com.example.cv2.mapper.PubMapper
 import com.example.cv2.service.RetrofitNewPubApi
 import com.example.cv2.service.RetrofitOverpassApi
+import com.example.cv2.utils.DistanceUtils
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import kotlinx.coroutines.DelicateCoroutinesApi
@@ -95,7 +96,7 @@ class CheckInPubFragment : Fragment() {
 
             val pubs = PubMapper().entryListToPubList(pubsResponse.elements.toMutableList())
             for (pub in pubs) {
-                val distance = distanceInKm(lat.toDouble(), lon.toDouble(), pub.lat!!, pub.lon!!)
+                val distance = DistanceUtils().distanceInKm(lat.toDouble(), lon.toDouble(), pub.lat!!, pub.lon!!)
                 pub.distance = distance.toBigDecimal().setScale(3, RoundingMode.UP).toDouble()
             }
             pubs.sortBy{ it.distance }
@@ -148,24 +149,6 @@ class CheckInPubFragment : Fragment() {
             }
             loadPubsInArea()
         }
-    }
-
-    fun distanceInKm(lat1: Double, lon1: Double, lat2: Double, lon2: Double): Double {
-        val theta = lon1 - lon2
-        var dist = Math.sin(deg2rad(lat1)) * Math.sin(deg2rad(lat2)) + Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) * Math.cos(deg2rad(theta))
-        dist = Math.acos(dist)
-        dist = rad2deg(dist)
-        dist = dist * 60 * 1.1515
-        dist = dist * 1.609344
-        return dist
-    }
-
-    private fun deg2rad(deg: Double): Double {
-        return deg * Math.PI / 180.0
-    }
-
-    private fun rad2deg(rad: Double): Double {
-        return rad * 180.0 / Math.PI
     }
 
 }

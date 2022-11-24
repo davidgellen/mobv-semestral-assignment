@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/menuSortPubName"
+        android:title="Nazov"/>
+    <item
+        android:id="@+id/menuSortPubPeople"
+        android:title="Pocet ludi"/>
+    <item
+        android:id="@+id/menuSortPubDistance"
+        android:title="Vzdialenost"/>
+</menu>

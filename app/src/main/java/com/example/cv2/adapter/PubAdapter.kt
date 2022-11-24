@@ -32,7 +32,7 @@ class PubAdapter(
             view.findNavController().navigate(R.id.action_allEntriesFragment_to_entryDetailFragment, bundle)
         }
         val item = entries[position]
-        holder.textView.text = item.name + " (" + item.users + ")"
+        holder.textView.text = "${item.name} (${item.users} ludi, ${item.distance} km)"
     }
 
     override fun getItemCount(): Int {

@@ -1,14 +1,18 @@
 package com.example.cv2.fragment
 
+import android.Manifest
 import android.content.Context
+import android.content.pm.PackageManager
 import android.os.Bundle
 import android.util.Log
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import android.widget.ImageButton
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
+import androidx.core.view.MenuProvider
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.Lifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.example.cv2.R
@@ -24,25 +28,31 @@ import com.example.cv2.databinding.FragmentAllEntriesBinding
 import com.example.cv2.databinding.FragmentCheckInPubBinding
 import com.example.cv2.mapper.PubMapper
 import com.example.cv2.service.RetrofitNewPubApi
+import com.example.cv2.utils.DistanceUtils
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationServices
 import com.google.gson.GsonBuilder
+import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import java.io.IOException
 import java.io.InputStream
+import java.math.RoundingMode
 
 class AllEntriesFragment : Fragment() {
 
     private lateinit var binding: FragmentAllEntriesBinding
+    private lateinit var fusedLocationProviderClient: FusedLocationProviderClient
+    private lateinit var lat : String
+    private lateinit var lon : String
+    private lateinit var currentSort: String
 
     private val pubViewModel: PubViewModel by activityViewModels() {
         PubViewModelFactory(
             (activity?.application as PubApplication).database.pubDao()
         )
     }
-
-//    private val dao = (activity?.application as PubApplication).database.pubDao()
-//    private val entryViewModel(dao): EntryViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -51,32 +61,51 @@ class AllEntriesFragment : Fragment() {
         binding = FragmentAllEntriesBinding.inflate(inflater, container, false)
         // Inflate the layout for this fragment
         val view = binding.root
+        fusedLocationProviderClient = activity?.let {
+            LocationServices.getFusedLocationProviderClient(it)
+        }!!
         val recyclerView = binding.enttriesRecycleView
         recyclerView.adapter = pubViewModel.entries.value?.let { PubAdapter(view, it) }
-
-        loadData(view)
+        currentSort = "none"
+        loadData(view, false)
 
         binding.toAddEntryButton.setOnClickListener {
             findNavController().navigate(R.id.action_allEntriesFragment_to_addNewEntry)
         }
-        binding.sortEntriesButton.setOnClickListener {
-            pubViewModel.entries.value?.sortBy { it.name }
-            (recyclerView.adapter as PubAdapter).notifyDataSetChanged()
-        }
         binding.swipeContainer.setOnRefreshListener {
-            loadData(view)
+            loadData(view, false)
         }
+        setMenuBar()
         return view
     }
 
-    private fun loadData(view: View) {
-        GlobalScope.launch(Dispatchers.Main) {
-            val fetchedEntries = loadJsonFromServer().toMutableList()
-            activity?.runOnUiThread {
-                pubViewModel.setEntries(fetchedEntries)
-                binding.enttriesRecycleView.adapter =
-                    pubViewModel.entries.value?.let { PubAdapter(view, it) }
-                binding.swipeContainer.isRefreshing = false
+    @DelicateCoroutinesApi
+    private fun loadData(view: View, useFei: Boolean) {
+        val task = fusedLocationProviderClient.lastLocation
+        if (context?.let { ActivityCompat.checkSelfPermission(it, Manifest.permission.ACCESS_FINE_LOCATION) } != PackageManager.PERMISSION_GRANTED &&
+            context?.let { ActivityCompat.checkSelfPermission(it, Manifest.permission.ACCESS_COARSE_LOCATION) } != PackageManager.PERMISSION_GRANTED) {
+            activity?.let { ActivityCompat.requestPermissions(it, arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), 101) }
+        }
+        task.addOnSuccessListener {
+            if (useFei) {
+                lat = "48.143483"
+                lon = "17.108513"
+            } else {
+                lat = it.latitude.toString()
+                lon = it.longitude.toString()
+            }
+            GlobalScope.launch(Dispatchers.Main) {
+                val fetchedEntries = loadJsonFromServer().toMutableList()
+                for (pub in fetchedEntries) {
+                    val distance = DistanceUtils().distanceInKm(lat.toDouble(), lon.toDouble(), pub.lat!!, pub.lon!!)
+                    pub.distance = distance.toBigDecimal().setScale(3, RoundingMode.UP).toDouble()
+                }
+                activity?.runOnUiThread {
+                    pubViewModel.setEntries(fetchedEntries)
+                    binding.enttriesRecycleView.adapter =
+                        pubViewModel.entries.value?.let { PubAdapter(view, it) }
+                    binding.swipeContainer.isRefreshing = false
+                }
             }
         }
     }
@@ -91,22 +120,35 @@ class AllEntriesFragment : Fragment() {
         return PubMapper().pubResponseListToPubEntityList(pubs)
     }
 
-//    private suspend fun loadJsonFromServer(): List<Entry> {
-//        val requestBody = PubsRequestBody("bars", "mobvapp", "Cluster0")
-//        val entries: EntryDatasourceWrapper = RetrofitPubApi.RETROFIT_SERVICE.getData(requestBody)
-//        return entries.documents
-//    }
+    private fun setMenuBar() {
+        requireActivity().addMenuProvider(object : MenuProvider {
+            override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
+                menuInflater.inflate(R.menu.pubs_menu, menu)
+            }
 
-    private fun loadJson(): List<Entry> {
-        try {
-            val inputStream: InputStream = context!!.assets.open("pubs.json")
-            val json = inputStream.bufferedReader().use { it.readText() }
-            val allEntries = GsonBuilder().create()
-                .fromJson(json, EntryDatasourceWrapper::class.java)
-            return allEntries.elements
-        } catch (e: IOException) {
-            e.printStackTrace()
-        }
-        return listOf()
+            override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
+                sortByProperty(menuItem.itemId)
+                return true
+            }
+        }, viewLifecycleOwner, Lifecycle.State.RESUMED)
     }
+
+    private fun sortByProperty(
+        currentId: Int
+    ) {
+        if (!currentSort.equals(currentId.toString())) {
+            when (currentId) {
+                R.id.menuSortPubName -> pubViewModel.entries.value?.sortBy { it.name }
+                R.id.menuSortPubDistance -> pubViewModel.entries.value?.sortBy { it.distance }
+                R.id.menuSortPubPeople -> pubViewModel.entries.value?.sortBy { it.users }
+                else -> pubViewModel.entries.value?.sortBy { it.users }
+            }
+            (binding.enttriesRecycleView.adapter as PubAdapter).notifyDataSetChanged()
+            currentSort = currentId.toString()
+        } else {
+            pubViewModel.entries.value?.reverse()
+            (binding.enttriesRecycleView.adapter as PubAdapter).notifyDataSetChanged()
+        }
+    }
+
 }
