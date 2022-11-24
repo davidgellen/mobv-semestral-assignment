@@ -1,10 +1,11 @@
 package com.example.cv2.fragment
 
 import android.os.Bundle
+import android.view.*
+import androidx.core.content.ContextCompat
+import androidx.core.view.MenuProvider
 import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import androidx.lifecycle.Lifecycle
 import androidx.navigation.fragment.findNavController
 import com.example.cv2.R
 import com.example.cv2.databinding.FragmentHomeScreenBinding
@@ -17,7 +18,6 @@ class HomeScreenFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
         binding = FragmentHomeScreenBinding.inflate(inflater, container, false)
         val view: View = binding.root
 

@@ -19,7 +19,7 @@ private val retrofit = Retrofit.Builder()
 interface OverpassService {
 
 @GET("interpreter")
-suspend fun getPubsWithPeople(
+suspend fun getPubsInArea(
     @Query(value = "data") data: String): EntryDatasourceWrapper
 
 }

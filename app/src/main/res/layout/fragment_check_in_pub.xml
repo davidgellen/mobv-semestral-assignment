@@ -14,38 +14,36 @@
             android:id="@+id/animationView4"
             android:layout_width="100dp"
             android:layout_height="100dp"
-            android:background="#F6B5B5"
-            app:layout_constraintBottom_toTopOf="@+id/showOnMapButton"
+            android:background="#FFFFFF"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/businessNameTextView"
+            app:layout_constraintTop_toTopOf="parent"
             app:lottie_autoPlay="false"
             app:lottie_loop="false"
             app:lottie_rawRes="@raw/beer2" />
-
-        <TextView
-            android:id="@+id/chosenPubToCheckIn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="32dp"
-            android:text="Vybraty podnik:"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/checkInRecyclerView"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:layout_marginTop="32dp"
             android:scrollbars="vertical"
             app:layoutManager="LinearLayoutManager"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/chosenPubToCheckIn"
-            app:layout_constraintVertical_bias="0.0" />
+            app:layout_constraintTop_toBottomOf="@+id/animationView4" />
+
+        <Button
+            android:id="@+id/checkInPubConfirmButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="NAHLASIT"
+            app:layout_constraintBottom_toTopOf="@+id/checkInRecyclerView"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 </FrameLayout>

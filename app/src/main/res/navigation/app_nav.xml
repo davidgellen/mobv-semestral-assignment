@@ -114,5 +114,9 @@
         android:id="@+id/checkInPubFragment"
         android:name="com.example.cv2.CheckInPubFragment"
         android:label="fragment_check_in_pub"
-        tools:layout="@layout/fragment_check_in_pub" />
+        tools:layout="@layout/fragment_check_in_pub" >
+        <action
+            android:id="@+id/action_checkInPubFragment_to_allEntriesFragment"
+            app:destination="@id/allEntriesFragment" />
+    </fragment>
 </navigation>

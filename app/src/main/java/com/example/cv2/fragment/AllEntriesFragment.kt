@@ -19,6 +19,8 @@ import com.example.cv2.data.jsonmapper.EntryDatasourceWrapper
 import com.example.cv2.data.model.PubViewModel
 import com.example.cv2.data.model.PubViewModelFactory
 import com.example.cv2.data.response.PubResponseBody
+import com.example.cv2.databinding.FragmentAllEntriesBinding
+import com.example.cv2.databinding.FragmentCheckInPubBinding
 import com.example.cv2.mapper.PubMapper
 import com.example.cv2.service.RetrofitNewPubApi
 import com.google.gson.GsonBuilder
@@ -28,6 +30,8 @@ import java.io.IOException
 import java.io.InputStream
 
 class AllEntriesFragment : Fragment() {
+
+    private lateinit var binding: FragmentAllEntriesBinding
 
     private val pubViewModel: PubViewModel by activityViewModels() {
         PubViewModelFactory(
@@ -42,24 +46,27 @@ class AllEntriesFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        binding = FragmentAllEntriesBinding.inflate(inflater, container, false)
         // Inflate the layout for this fragment
-        val view = inflater.inflate(R.layout.fragment_all_entries, container, false)
-        val recyclerView = view.findViewById<RecyclerView>(R.id.enttries_recycle_view)
+        val view = binding.root
+        val recyclerView = binding.enttriesRecycleView
         recyclerView.adapter = pubViewModel.entries.value?.let { PubAdapter(view, it) }
 
         val entryToPubMapper = PubMapper()
 
-        GlobalScope.launch {
-            if (pubViewModel.entries.value?.size ?: 0 == 0) {
-                val fetchedEntries = loadJsonFromServer().toMutableList()
-//                val pubs = entryToPubMapper.entryListToPubList(fetchedEntries)
-                activity?.runOnUiThread {
-                    pubViewModel.setEntries(fetchedEntries)
-                    recyclerView.adapter =
-                        pubViewModel.entries.value?.let { PubAdapter(view, it) }
-                }
-            }
-        }
+        loadData(view)
+
+//        GlobalScope.launch {
+//            if (pubViewModel.entries.value?.size ?: 0 == 0) {
+//                val fetchedEntries = loadJsonFromServer().toMutableList()
+////                val pubs = entryToPubMapper.entryListToPubList(fetchedEntries)
+//                activity?.runOnUiThread {
+//                    pubViewModel.setEntries(fetchedEntries)
+//                    recyclerView.adapter =
+//                        pubViewModel.entries.value?.let { PubAdapter(view, it) }
+//                }
+//            }
+//        }
         view.findViewById<ImageButton>(R.id.toAddEntryButton).setOnClickListener {
             findNavController().navigate(R.id.action_allEntriesFragment_to_addNewEntry)
         }
@@ -68,6 +75,20 @@ class AllEntriesFragment : Fragment() {
             (recyclerView.adapter as PubAdapter).notifyDataSetChanged()
         }
         return view
+    }
+
+    private fun loadData(view: View) {
+        GlobalScope.launch {
+            if (pubViewModel.entries.value?.size ?: 0 == 0) {
+                val fetchedEntries = loadJsonFromServer().toMutableList()
+//                val pubs = entryToPubMapper.entryListToPubList(fetchedEntries)
+                activity?.runOnUiThread {
+                    pubViewModel.setEntries(fetchedEntries)
+                    binding.enttriesRecycleView.adapter =
+                        pubViewModel.entries.value?.let { PubAdapter(view, it) }
+                }
+            }
+        }
     }
 
     private suspend fun loadJsonFromServer(): List<Pub> {
