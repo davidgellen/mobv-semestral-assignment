@@ -69,11 +69,18 @@ class AllEntriesFragment : Fragment() {
         currentSort = "none"
         loadData(view, false)
 
-        binding.toAddEntryButton.setOnClickListener {
-            findNavController().navigate(R.id.action_allEntriesFragment_to_addNewEntry)
-        }
+        binding.toAddEntryButton.visibility = View.INVISIBLE
+//        binding.toAddEntryButton.setOnClickListener {
+//            findNavController().navigate(R.id.action_allEntriesFragment_to_addNewEntry)
+//        }
         binding.swipeContainer.setOnRefreshListener {
             loadData(view, false)
+        }
+        binding.entriesToMenuButton.setOnClickListener {
+            findNavController().navigate(R.id.action_allEntriesFragment_to_homeScreenFragment)
+        }
+        binding.entriesToCheckInButton.setOnClickListener {
+            findNavController().navigate(R.id.action_allEntriesFragment_to_checkInPubFragment)
         }
         setMenuBar()
         return view

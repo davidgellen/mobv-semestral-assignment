@@ -46,6 +46,12 @@
         <action
             android:id="@+id/action_allEntriesFragment_to_entryDetailFragment"
             app:destination="@id/entryDetailFragment" />
+        <action
+            android:id="@+id/action_allEntriesFragment_to_homeScreenFragment"
+            app:destination="@id/homeScreenFragment" />
+        <action
+            android:id="@+id/action_allEntriesFragment_to_checkInPubFragment"
+            app:destination="@id/checkInPubFragment" />
     </fragment>
     <fragment
         android:id="@+id/entryDetailFragment"
@@ -64,6 +70,9 @@
         <action
             android:id="@+id/action_registerFragment_to_loginFragment"
             app:destination="@id/loginFragment" />
+        <action
+            android:id="@+id/action_registerFragment_to_homeScreenFragment"
+            app:destination="@id/homeScreenFragment" />
     </fragment>
     <fragment
         android:id="@+id/loginFragment"
