@@ -1,11 +1,13 @@
 package com.example.cv2.adapter
 
 import android.content.Context
+import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.example.cv2.R
 import com.example.cv2.data.entity.Contact
@@ -27,9 +29,13 @@ class ContactAdapter(
 
     override fun onBindViewHolder(holder: ContactViewHolder, position: Int) {
         holder.itemView.setOnClickListener { view ->
-            Log.i("TODO", "ZOBRAZ DETAIL PODNIKU")
+            val bundle = Bundle()
+            bundle.putLong("pubApiId", contacts[position].barId!!.toLong())
+            bundle.putLong("users", contacts[position].userId)
+            view.findNavController()
+                .navigate(R.id.action_allFriendsFragment_to_entryDetailFragment, bundle)
         }
-        holder.textView.text = contacts[position].contactName
+        holder.textView.text = "${contacts[position].contactName} + (${contacts[position].barName})"
     }
 
     override fun getItemCount(): Int {

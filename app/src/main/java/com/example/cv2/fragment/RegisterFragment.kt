@@ -60,14 +60,12 @@ class RegisterFragment : Fragment() {
     @DelicateCoroutinesApi
     fun register() {
         GlobalScope.launch(Dispatchers.Main) {
-            Log.i("DELAM", "CO MAM")
             val username = binding.registerName
             val password = binding.registerPassword
             val registerBody = RegisterRequestBody(username.text.toString(), password.text.toString())
             val response: RegisterResponseBody =
                 RetrofitUserApi.RETROFIT_SERVICE.register(registerBody)
             if (response.uid.toInt() == -1) {
-                Log.i("REGISTER", "SAME NAME")
                 activity?.runOnUiThread {
                     Toast
                         .makeText(
