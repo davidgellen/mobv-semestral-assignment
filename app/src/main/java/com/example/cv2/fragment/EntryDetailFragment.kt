@@ -1,39 +1,73 @@
 package com.example.cv2.fragment
 
+import android.annotation.SuppressLint
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageButton
-import android.widget.TextView
+import android.widget.Toast
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.example.cv2.R
-import com.example.cv2.data.entity.Pub
 import com.example.cv2.data.jsonmapper.Entry
 import com.example.cv2.data.model.PubViewModel
+import com.example.cv2.databinding.FragmentEntryDetailBinding
+import com.example.cv2.mapper.PubMapper
+import com.example.cv2.service.RetrofitOverpassApi
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
 class EntryDetailFragment : Fragment() {
 
+    private lateinit var binding: FragmentEntryDetailBinding
     private val pubViewModel: PubViewModel by viewModels()
 
+    @SuppressLint("SetTextI18n")
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
-        val view = inflater.inflate(R.layout.fragment_entry_detail, container, false)
-        val pub: Pub = arguments?.getSerializable("entry") as Pub
-//        view.findViewById<TextView>(R.id.detailNameTextView).text = pub.name
-//        view.findViewById<TextView>(R.id.detailOpeningHours).text = "Hodiny: " + mapNullStringToEmpty(pub.tags.opening_hours)
-//        view.findViewById<TextView>(R.id.detailCity).text = "Adresa: " + createAddress(pub.tags.street,pub.tags.houseNumber, pub.tags.city, pub.tags.country)
-//        view.findViewById<TextView>(R.id.editWebsite).text = "Stranka: " + mapNullStringToEmpty(pub.tags.website)
-        view.findViewById<ImageButton>(R.id.editDeleteCurrent).setOnClickListener {
-//            pubViewModel.entries.value?.remove(entry) TODO: fix deleting
+        binding = FragmentEntryDetailBinding.inflate(inflater, container, false)
+//        val pub: Pub = arguments?.getSerializable("entry") as Pub
+
+        GlobalScope.launch(Dispatchers.Main) {
+            val pubId = arguments?.getLong("pubApiId").toString()
+            Log.i("RECEIVED PUB ID", pubId)
+            val body = "[out:json];node(${pubId});out body;>;out skel;"
+            val pubResponse: List<Entry> = RetrofitOverpassApi.RETROFIT_SERVICE
+                .getPubsInArea(body).elements
+            if (pubResponse.size == 1) {
+                val res = PubMapper().entryToPub(pubResponse[0])
+                activity?.runOnUiThread {
+                    binding.detailNameTextView.text = res.name
+                    binding.detailOpeningHours.text = "Hodiny: " + mapNullStringToEmpty(res.openingHours)
+//                    binding.detailCity.text = "Adresa: " + createAddress(pub.tags.street,pub.tags.houseNumber, pub.tags.city, pub.tags.country)
+                    binding.editWebsite.text = "Stranka: " + mapNullStringToEmpty(res.website)
+                    binding.editDetailUserCount.text = "Ludi :${arguments?.getLong("users").toString()}"
+                    binding.editGps.text = "GPS: ${res.lat}, ${res.lon}"
+                    binding.editGpsMapButton.setOnClickListener {
+                        val coordinates: String = "geo:" + res.lat.toString() + "," + res.lon.toString()
+                        val gmmIntentUri = Uri.parse(coordinates)
+                        val mapIntent = Intent(Intent.ACTION_VIEW, gmmIntentUri)
+                        mapIntent.setPackage("com.google.android.apps.maps")
+                        startActivity(mapIntent)
+                    }
+                }
+            } else {
+                Toast.makeText( activity?.applicationContext, "DETAIL PRE ZVOLENY PODNIK NEEXISTUJE", Toast.LENGTH_SHORT).show()
+            }
+        }
+
+        binding.editDeleteCurrent.setOnClickListener {
             findNavController().navigate(R.id.action_entryDetailFragment_to_allEntriesFragment)
         }
-        return view
+
+        return binding.root
     }
 
     private fun createAddress(

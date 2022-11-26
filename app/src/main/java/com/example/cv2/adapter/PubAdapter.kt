@@ -1,6 +1,7 @@
 package com.example.cv2.adapter
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,23 +14,27 @@ import com.example.cv2.data.entity.Pub
 class PubAdapter(
     private val context: View,
     private val entries: MutableList<Pub>,
-) : RecyclerView.Adapter<PubAdapter.EntryViewHolder>(){
+) : RecyclerView.Adapter<PubAdapter.PubViewHolder>() {
 
-    class EntryViewHolder(private val view: View) : RecyclerView.ViewHolder(view) {
+    class PubViewHolder(private val view: View) : RecyclerView.ViewHolder(view) {
         val textView: TextView = view.findViewById(R.id.entry_title)
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): EntryViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PubViewHolder {
         val adapterLayout = LayoutInflater.from(parent.context)
             .inflate(R.layout.entry_item, parent, false)
-        return EntryViewHolder(adapterLayout)
+        return PubViewHolder(adapterLayout)
     }
 
-    override fun onBindViewHolder(holder: EntryViewHolder, position: Int) {
-        holder.itemView.setOnClickListener{ view ->
+    override fun onBindViewHolder(holder: PubViewHolder, position: Int) {
+        holder.itemView.setOnClickListener { view ->
             val bundle = Bundle()
             bundle.putSerializable("entry", entries[position])
-            view.findNavController().navigate(R.id.action_allEntriesFragment_to_entryDetailFragment, bundle)
+            bundle.putLong("pubApiId", entries[position].importedId!!)
+            bundle.putLong("users", entries[position].users!!)
+            Log.i("pubApiId", entries[position].importedId.toString())
+            view.findNavController()
+                .navigate(R.id.action_allEntriesFragment_to_entryDetailFragment, bundle)
         }
         val item = entries[position]
         holder.textView.text = "${item.name} (${item.users} ludi, ${item.distance} km)"
