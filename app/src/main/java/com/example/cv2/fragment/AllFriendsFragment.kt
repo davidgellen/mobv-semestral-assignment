@@ -7,11 +7,18 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.example.cv2.R
 import com.example.cv2.adapter.ContactAdapter
+import com.example.cv2.adapter.PubAdapter
+import com.example.cv2.application.PubApplication
 import com.example.cv2.data.entity.Contact
+import com.example.cv2.data.model.ContactViewModel
+import com.example.cv2.data.model.ContactViewModelFactory
+import com.example.cv2.data.model.PubViewModel
+import com.example.cv2.data.model.PubViewModelFactory
 import com.example.cv2.data.response.ContactResponseBody
 import com.example.cv2.databinding.FragmentAllFriendsBinding
 import com.example.cv2.mapper.ContactResponseToEntityMapper
@@ -24,6 +31,12 @@ class AllFriendsFragment : Fragment() {
 
     private lateinit var binding: FragmentAllFriendsBinding
 
+    private val contactViewModel: ContactViewModel by activityViewModels() {
+        ContactViewModelFactory(
+            (activity?.application as PubApplication).database.contactDao()
+        )
+    }
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -35,7 +48,7 @@ class AllFriendsFragment : Fragment() {
 
         val contactsRecyclerView = binding.friendListRecyclerView
         contactsRecyclerView.adapter =
-            activity?.applicationContext?.let { ContactAdapter(it, mutableListOf()) }
+            activity?.applicationContext?.let { ContactAdapter(view, mutableListOf()) }
 
         fetchAllFriends(contactsRecyclerView)
 
@@ -65,13 +78,11 @@ class AllFriendsFragment : Fragment() {
                 .allFriends(accessToken , uid)
             val contacts: MutableList<Contact> = ContactResponseToEntityMapper().entryListToPubList(
                 response.toMutableList(), uid.toLong())
-            for (c in contacts) {
-                Log.i(c.contactId.toString(), c.contactName)
-            }
 
             activity?.runOnUiThread {
+                contactViewModel.setContacts(contacts)
                 contactsRecyclerView.adapter =
-                    activity?.let { ContactAdapter(it.applicationContext, contacts) }
+                    contactViewModel.entries.value?.let { ContactAdapter(view!!, it)}
                 Log.i("CONTACT ADAPTER", "LIST SET TO FETCHED DATA")
 
             }

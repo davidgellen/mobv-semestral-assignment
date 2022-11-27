@@ -5,6 +5,7 @@ import android.util.Log
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import com.example.cv2.dao.ContactDao
 import com.example.cv2.dao.PubDao
 import com.example.cv2.data.entity.Pub
 
@@ -12,6 +13,7 @@ import com.example.cv2.data.entity.Pub
 abstract class AppDatabase : RoomDatabase() {
 
     abstract fun pubDao(): PubDao
+    abstract fun contactDao(): ContactDao
 
     companion object {
 

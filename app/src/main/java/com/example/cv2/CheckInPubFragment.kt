@@ -16,9 +16,16 @@ import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import com.example.cv2.adapter.CheckInPubAdapter
+import com.example.cv2.adapter.ContactAdapter
+import com.example.cv2.application.PubApplication
 import com.example.cv2.data.entity.Pub
+import com.example.cv2.data.model.CheckInPubViewModel
+import com.example.cv2.data.model.CheckInPubViewModelFactory
+import com.example.cv2.data.model.ContactViewModel
+import com.example.cv2.data.model.ContactViewModelFactory
 import com.example.cv2.data.request.CheckIntoPubRequestBody
 import com.example.cv2.databinding.FragmentCheckInPubBinding
 import com.example.cv2.mapper.PubMapper
@@ -42,6 +49,12 @@ class CheckInPubFragment : Fragment() {
     private lateinit var lat : String
     private lateinit var lon : String
 
+    private val checkInPubViewModel: CheckInPubViewModel by activityViewModels() {
+        CheckInPubViewModelFactory(
+            (activity?.application as PubApplication).database.pubDao()
+        )
+    }
+
     @RequiresApi(Build.VERSION_CODES.N)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -61,13 +74,7 @@ class CheckInPubFragment : Fragment() {
 
         val recyclerView = binding.checkInRecyclerView
         recyclerView.adapter =
-            activity?.applicationContext?.let { CheckInPubAdapter(it, mutableListOf()) }
-
-//        val toolbar = (activity as AppCompatActivity).supportActionBar
-//        toolbar?.title = "JOZO"
-//        toolbar?.setDisplayHomeAsUpEnabled(true)
-//        toolbar?.setDisplayShowHomeEnabled(true)
-//        toolbar?.displayOptions
+            activity?.applicationContext?.let { CheckInPubAdapter(view, mutableListOf()) }
 
         fetchLocation(false)
 
@@ -102,8 +109,10 @@ class CheckInPubFragment : Fragment() {
             pubs.sortBy{ it.distance }
 
             val recyclerView = binding.checkInRecyclerView
+            checkInPubViewModel.setPubs(pubs)
             recyclerView.adapter =
-                activity?.applicationContext?.let { CheckInPubAdapter(it, pubs) }
+                checkInPubViewModel.pubs.value?.let { CheckInPubAdapter(view!!, pubs) }
+//                activity?.applicationContext?.let { CheckInPubAdapter(it, pubs) }
 
             binding.checkInPubConfirmButton.setOnClickListener {
                 binding.animationView4.playAnimation()

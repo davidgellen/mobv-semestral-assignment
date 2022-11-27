@@ -16,7 +16,7 @@ import com.example.cv2.data.entity.Pub
 import com.example.cv2.databinding.CheckInPubItemBinding
 
 class CheckInPubAdapter(
-    private val context: Context,
+    private val context: View,
     private val pubs: MutableList<Pub>
 ) : RecyclerView.Adapter<CheckInPubAdapter.PubViewHolder>() {
 
