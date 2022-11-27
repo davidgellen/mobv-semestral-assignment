@@ -5,6 +5,8 @@ import com.example.cv2.data.request.RegisterRequestBody
 import com.example.cv2.data.response.PubResponseBody
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
+import retrofit2.Call
+import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.converter.scalars.ScalarsConverterFactory
@@ -47,7 +49,7 @@ interface NewPubService {
         "x-apikey: $API_KEY")
     @GET("list.php")
     suspend fun getPubsWithPeople(@Header("authorization") accessToken: String,
-                                  @Header("x-user") uid: String): MutableList<PubResponseBody>
+                                  @Header("x-user") uid: String): Response<MutableList<PubResponseBody>>
 
     @Headers(
         "Accept: application/json",

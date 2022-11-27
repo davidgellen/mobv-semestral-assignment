@@ -1,13 +1,16 @@
 package com.example.cv2.service
 
+import com.example.cv2.data.request.RefreshTokenRequestBody
 import com.example.cv2.data.request.RegisterRequestBody
 import com.example.cv2.data.response.RegisterResponseBody
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
+import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.converter.scalars.ScalarsConverterFactory
 import retrofit2.http.Body
+import retrofit2.http.Header
 import retrofit2.http.Headers
 import retrofit2.http.POST
 import java.util.concurrent.TimeUnit
@@ -57,6 +60,15 @@ interface UserService {
         "x-apikey: $API_KEY")
     @POST("login.php")
     suspend fun login(@Body requestBody: RegisterRequestBody): RegisterResponseBody
+
+    @Headers(
+        "Accept: application/json",
+        "Content-Type: application/json",
+        "Cache-Control: no-cache",
+        "x-apikey: $API_KEY")
+    @POST("refresh.php")
+    suspend fun refreshToken(@Header("x-user") uid: String,
+                             @Body requestBody: RefreshTokenRequestBody): Response<RegisterResponseBody>
 
 }
 

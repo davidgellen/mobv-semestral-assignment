@@ -23,11 +23,14 @@ import com.example.cv2.data.jsonmapper.Entry
 import com.example.cv2.data.jsonmapper.EntryDatasourceWrapper
 import com.example.cv2.data.model.PubViewModel
 import com.example.cv2.data.model.PubViewModelFactory
+import com.example.cv2.data.request.RefreshTokenRequestBody
 import com.example.cv2.data.response.PubResponseBody
+import com.example.cv2.data.response.RegisterResponseBody
 import com.example.cv2.databinding.FragmentAllEntriesBinding
 import com.example.cv2.databinding.FragmentCheckInPubBinding
 import com.example.cv2.mapper.PubMapper
 import com.example.cv2.service.RetrofitNewPubApi
+import com.example.cv2.service.RetrofitUserApi
 import com.example.cv2.utils.DistanceUtils
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
@@ -36,6 +39,10 @@ import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.HttpException
+import retrofit2.Response
 import java.io.IOException
 import java.io.InputStream
 import java.math.RoundingMode
@@ -102,7 +109,8 @@ class AllEntriesFragment : Fragment() {
                 lon = it.longitude.toString()
             }
             GlobalScope.launch(Dispatchers.Main) {
-                val fetchedEntries = loadJsonFromServer().toMutableList()
+                val resp = loadJsonFromServer()
+                val fetchedEntries = resp.toMutableList()
                 for (pub in fetchedEntries) {
                     val distance = DistanceUtils().distanceInKm(lat.toDouble(), lon.toDouble(), pub.lat!!, pub.lon!!)
                     pub.distance = distance.toBigDecimal().setScale(3, RoundingMode.UP).toDouble()
@@ -122,9 +130,39 @@ class AllEntriesFragment : Fragment() {
             "PREFERENCE_NAME", Context.MODE_PRIVATE)
         val accessToken = "Bearer " + (sharedPreference?.getString("access", "defaultAccess") ?: "defaultAccess")
         val uid = sharedPreference?.getString("uid", "defaultUid") ?: "defaultUid"
-        val pubs: MutableList<PubResponseBody> = RetrofitNewPubApi.RETROFIT_SERVICE
+        val pubs: Response<MutableList<PubResponseBody>> = RetrofitNewPubApi.RETROFIT_SERVICE
             .getPubsWithPeople(accessToken, uid)
-        return PubMapper().pubResponseListToPubEntityList(pubs)
+
+        try {
+            if (pubs.isSuccessful) {
+                return PubMapper().pubResponseListToPubEntityList(pubs.body()!!.toMutableList())
+            } else {
+                if (pubs.code() == 401) {
+                    val body = RefreshTokenRequestBody(sharedPreference?.getString("refresh", "") ?: "")
+                    val refreshResponse: Response<RegisterResponseBody> =
+                        RetrofitUserApi.RETROFIT_SERVICE.refreshToken(uid, body)
+                    val editor = sharedPreference?.edit()
+                    editor?.putString("access", refreshResponse.body()?.access)
+                    editor?.putString("refresh", refreshResponse.body()?.refresh)
+                    editor?.apply()
+                    val renewedPubs: Response<MutableList<PubResponseBody>> = RetrofitNewPubApi.RETROFIT_SERVICE
+                        .getPubsWithPeople("Bearer " + (sharedPreference?.getString("access", "defaultAccess") ?: "defaultAccess"), uid)
+                    return PubMapper().pubResponseListToPubEntityList(renewedPubs.body()!!.toMutableList())
+                }
+                return mutableListOf()
+            }
+        } catch (e: HttpException) {
+            Log.e("Exception", "${e.message}")
+            // TODO if exception == 401 return this function after refresh token DO MATERINEJ PIZZZZZE
+            return mutableListOf()
+
+        } catch (e: Throwable) {
+            Log.e("Ooops:", "Something else went wrong")
+            return mutableListOf()
+
+        }
+
+
     }
 
     private fun setMenuBar() {
