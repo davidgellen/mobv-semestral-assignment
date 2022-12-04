@@ -121,6 +121,9 @@
         <action
             android:id="@+id/action_homeScreenFragment_to_checkInPubFragment"
             app:destination="@id/checkInPubFragment" />
+        <action
+            android:id="@+id/action_homeScreenFragment_to_loginFragment"
+            app:destination="@id/loginFragment" />
     </fragment>
     <fragment
         android:id="@+id/checkInPubFragment"
