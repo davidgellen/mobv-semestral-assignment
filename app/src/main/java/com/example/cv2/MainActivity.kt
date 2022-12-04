@@ -32,16 +32,14 @@ class MainActivity : AppCompatActivity() {
             "PREFERENCE_NAME", Context.MODE_PRIVATE
         )
 
-        val editor = sharedPreference?.edit()
+//        val editor = sharedPreference?.edit()
 //        editor?.clear()
-        editor?.putString("access", "kokotpica")
-        editor?.apply()
+//        editor?.apply()
 
         val accessToken = sharedPreference?.getString("access", null)
 
         if (accessToken != null) {
             Log.e("ACTIVITY ON CREATE", "HAS ACCESS TOKEN, REDIRECT TO ALL ENTRIES")
-            // TODO: refresh token
             graph.setStartDestination(R.id.allEntriesFragment)
         } else {
             Log.e("ACTIVITY ON CREATE", "no access token, redirecting to login")
@@ -53,4 +51,5 @@ class MainActivity : AppCompatActivity() {
     override fun onSupportNavigateUp(): Boolean {
         return navController.navigateUp() || super.onSupportNavigateUp()
     }
+
 }
