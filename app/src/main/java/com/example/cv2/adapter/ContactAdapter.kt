@@ -1,8 +1,6 @@
 package com.example.cv2.adapter
 
-import android.content.Context
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,11 +8,11 @@ import android.widget.TextView
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.example.cv2.R
-import com.example.cv2.data.entity.Contact
+import com.example.cv2.data.model.ContactViewModel
 
 class ContactAdapter(
     private val context: View,
-    private val contacts: MutableList<Contact>
+    private val contactViewModel: ContactViewModel
 ) : RecyclerView.Adapter<ContactAdapter.ContactViewHolder>() {
 
     class ContactViewHolder(private val view: View) : RecyclerView.ViewHolder(view) {
@@ -28,22 +26,22 @@ class ContactAdapter(
     }
 
     override fun onBindViewHolder(holder: ContactViewHolder, position: Int) {
-        if (contacts[position].barId != null) {
+        if (contactViewModel.entries.value?.get(position)?.barId != null) {
             holder.itemView.setOnClickListener { view ->
                 val bundle = Bundle()
-                bundle.putLong("pubApiId", contacts[position].barId!!.toLong())
-                bundle.putLong("users", contacts[position].userId)
+                bundle.putLong("pubApiId", contactViewModel.entries.value?.get(position)?.barId!!.toLong())
+                bundle.putLong("users", contactViewModel.entries.value?.get(position)?.userId!!)
                 view.findNavController()
                     .navigate(R.id.action_allFriendsFragment_to_entryDetailFragment, bundle)
             }
-            holder.textView.text = "${contacts[position].contactName} + (${contacts[position].barName})"
+            holder.textView.text = "${contactViewModel.entries.value?.get(position)?.contactName} + (${contactViewModel.entries.value?.get(position)?.barName})"
         } else {
-            holder.textView.text = "${contacts[position].contactName}"
+            holder.textView.text = "${contactViewModel.entries.value?.get(position)?.contactName}"
         }
     }
 
     override fun getItemCount(): Int {
-        return contacts.size
+        return contactViewModel.entries.value?.size!!
     }
 
 }
