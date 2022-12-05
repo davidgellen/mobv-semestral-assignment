@@ -1,23 +1,20 @@
 package com.example.cv2.adapter
 
-import android.app.Activity
-import android.content.Context
 import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import android.widget.Toast
 import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.RecyclerView
 import com.airbnb.lottie.LottieAnimationView
 import com.example.cv2.R
 import com.example.cv2.data.entity.Pub
-import com.example.cv2.databinding.CheckInPubItemBinding
+import com.example.cv2.data.model.CheckInPubViewModel
 
 class CheckInPubAdapter(
     private val context: View,
-    private val pubs: MutableList<Pub>
+    private val checkInPubViewModel: CheckInPubViewModel
 ) : RecyclerView.Adapter<CheckInPubAdapter.PubViewHolder>() {
 
     private var currentPub: Pub? = null
@@ -40,23 +37,23 @@ class CheckInPubAdapter(
     }
 
     override fun onBindViewHolder(holder: PubViewHolder, position: Int) {
-        val item = pubs[position]
+        val item = checkInPubViewModel.pubs.value?.get(position)
         if (position == currentPosition) {
             holder.card.setBackgroundColor(Color.GREEN)
         } else {
             holder.card.setBackgroundColor(Color.RED)
         }
-        holder.textView.text = "${item.name} (${item.distance} km)"
+        holder.textView.text = "${item?.name} (${item?.distance} km)"
         holder.itemView.setOnClickListener {
             holder.lottieCheckBox.playAnimation()
-            currentPub = pubs[position]
+            currentPub = checkInPubViewModel.pubs.value?.get(position)
             notifyDataSetChanged()
             currentPosition = position
         }
     }
 
     override fun getItemCount(): Int {
-        return pubs.size
+        return checkInPubViewModel.pubs.value?.size!!
     }
 
 }
