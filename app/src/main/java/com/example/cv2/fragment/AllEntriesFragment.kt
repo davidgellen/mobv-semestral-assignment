@@ -57,7 +57,8 @@ class AllEntriesFragment : Fragment() {
 
     private val pubViewModel: PubViewModel by activityViewModels() {
         PubViewModelFactory(
-            (activity?.application as PubApplication).database.pubDao()
+            (activity?.application as PubApplication).database.pubDao(),
+            activity?.application as PubApplication
         )
     }
 
@@ -71,98 +72,30 @@ class AllEntriesFragment : Fragment() {
         fusedLocationProviderClient = activity?.let {
             LocationServices.getFusedLocationProviderClient(it)
         }!!
+        pubViewModel.fusedLocationProviderClient = fusedLocationProviderClient
+
         val recyclerView = binding.enttriesRecycleView
-        recyclerView.adapter = pubViewModel.entries.value?.let { PubAdapter(view, it) }
         currentSort = "none"
-        loadData(view, false)
+        pubViewModel.loadData(false)
+        pubViewModel.entries.observe(viewLifecycleOwner) {
+            recyclerView.adapter = PubAdapter(view, pubViewModel)
+        }
 
         binding.toAddEntryButton.visibility = View.INVISIBLE
-//        binding.toAddEntryButton.setOnClickListener {
-//            findNavController().navigate(R.id.action_allEntriesFragment_to_addNewEntry)
-//        }
-        binding.swipeContainer.setOnRefreshListener {
-            loadData(view, false)
-        }
+
         binding.entriesToMenuButton.setOnClickListener {
             findNavController().navigate(R.id.action_allEntriesFragment_to_homeScreenFragment)
         }
         binding.entriesToCheckInButton.setOnClickListener {
             findNavController().navigate(R.id.action_allEntriesFragment_to_checkInPubFragment)
         }
+        binding.swipeContainer.setOnRefreshListener {
+            pubViewModel.loadData(false)
+            binding.swipeContainer.isRefreshing = false
+        }
+
         setMenuBar()
         return view
-    }
-
-    @DelicateCoroutinesApi
-    private fun loadData(view: View, useFei: Boolean) {
-        val task = fusedLocationProviderClient.lastLocation
-        if (context?.let { ActivityCompat.checkSelfPermission(it, Manifest.permission.ACCESS_FINE_LOCATION) } != PackageManager.PERMISSION_GRANTED &&
-            context?.let { ActivityCompat.checkSelfPermission(it, Manifest.permission.ACCESS_COARSE_LOCATION) } != PackageManager.PERMISSION_GRANTED) {
-            activity?.let { ActivityCompat.requestPermissions(it, arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), 101) }
-        }
-        task.addOnSuccessListener {
-            if (useFei) {
-                lat = "48.143483"
-                lon = "17.108513"
-            } else {
-                lat = it.latitude.toString()
-                lon = it.longitude.toString()
-            }
-            GlobalScope.launch(Dispatchers.Main) {
-                val resp = loadJsonFromServer()
-                val fetchedEntries = resp.toMutableList()
-                for (pub in fetchedEntries) {
-                    val distance = DistanceUtils().distanceInKm(lat.toDouble(), lon.toDouble(), pub.lat!!, pub.lon!!)
-                    pub.distance = distance.toBigDecimal().setScale(3, RoundingMode.UP).toDouble()
-                }
-                activity?.runOnUiThread {
-                    pubViewModel.setEntries(fetchedEntries)
-                    binding.enttriesRecycleView.adapter =
-                        pubViewModel.entries.value?.let { PubAdapter(view, it) }
-                    binding.swipeContainer.isRefreshing = false
-                }
-            }
-        }
-    }
-
-    private suspend fun loadJsonFromServer(): List<Pub> {
-        val sharedPreference = activity?.applicationContext?.getSharedPreferences(
-            "PREFERENCE_NAME", Context.MODE_PRIVATE)
-        val accessToken = "Bearer " + (sharedPreference?.getString("access", "defaultAccess") ?: "defaultAccess")
-        val uid = sharedPreference?.getString("uid", "defaultUid") ?: "defaultUid"
-        val pubs: Response<MutableList<PubResponseBody>> = RetrofitNewPubApi.RETROFIT_SERVICE
-            .getPubsWithPeople(accessToken, uid)
-
-        try {
-            if (pubs.isSuccessful) {
-                return PubMapper().pubResponseListToPubEntityList(pubs.body()!!.toMutableList())
-            } else {
-                if (pubs.code() == 401) {
-                    val body = RefreshTokenRequestBody(sharedPreference?.getString("refresh", "") ?: "")
-                    val refreshResponse: Response<RegisterResponseBody> =
-                        RetrofitUserApi.RETROFIT_SERVICE.refreshToken(uid, body)
-                    val editor = sharedPreference?.edit()
-                    editor?.putString("access", refreshResponse.body()?.access)
-                    editor?.putString("refresh", refreshResponse.body()?.refresh)
-                    editor?.apply()
-                    val renewedPubs: Response<MutableList<PubResponseBody>> = RetrofitNewPubApi.RETROFIT_SERVICE
-                        .getPubsWithPeople("Bearer " + (sharedPreference?.getString("access", "defaultAccess") ?: "defaultAccess"), uid)
-                    return PubMapper().pubResponseListToPubEntityList(renewedPubs.body()!!.toMutableList())
-                }
-                return mutableListOf()
-            }
-        } catch (e: HttpException) {
-            Log.e("Exception", "${e.message}")
-            // TODO if exception == 401 return this function after refresh token DO MATERINEJ PIZZZZZE
-            return mutableListOf()
-
-        } catch (e: Throwable) {
-            Log.e("Ooops:", "Something else went wrong")
-            return mutableListOf()
-
-        }
-
-
     }
 
     private fun setMenuBar() {

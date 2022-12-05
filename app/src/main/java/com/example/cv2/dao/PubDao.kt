@@ -1,5 +1,6 @@
 package com.example.cv2.dao
 
+import androidx.lifecycle.LiveData
 import androidx.room.*
 import com.example.cv2.data.entity.Pub
 import kotlinx.coroutines.flow.Flow
@@ -8,7 +9,7 @@ import kotlinx.coroutines.flow.Flow
 interface PubDao {
 
     @Query("SELECT * FROM pub ORDER BY id ASC")
-    fun getAll(): Flow<List<Pub>>
+    fun getAll(): LiveData<List<Pub>>
 
     @Query("SELECT * FROM pub WHERE id = :id ORDER BY id ASC")
     fun getOne(id: Int): Flow<Pub>

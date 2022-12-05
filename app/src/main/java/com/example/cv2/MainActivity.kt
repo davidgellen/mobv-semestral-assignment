@@ -1,11 +1,14 @@
 package com.example.cv2
 
+import android.Manifest
 import android.content.Context
+import android.content.pm.PackageManager
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.AttributeSet
 import android.util.Log
 import android.view.View
+import androidx.core.app.ActivityCompat
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
@@ -27,6 +30,11 @@ class MainActivity : AppCompatActivity() {
         setupActionBarWithNavController(navHostFragment.navController)
         navController = navHostFragment.navController
         val graph = navController.navInflater.inflate(R.navigation.app_nav)
+
+        if (this.let { ActivityCompat.checkSelfPermission(it, Manifest.permission.ACCESS_FINE_LOCATION) } != PackageManager.PERMISSION_GRANTED &&
+            this.let { ActivityCompat.checkSelfPermission(it, Manifest.permission.ACCESS_COARSE_LOCATION) } != PackageManager.PERMISSION_GRANTED) {
+            this.let { ActivityCompat.requestPermissions(it, arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), 101) }
+        }
 
         val sharedPreference = getSharedPreferences(
             "PREFERENCE_NAME", Context.MODE_PRIVATE
