@@ -4,12 +4,8 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
-@Entity
+@Entity(primaryKeys = ["user_id", "contact_id"])
 data class Contact (
-
-    @PrimaryKey
-    @ColumnInfo(name = "id")
-    val id: Long = 0,
 
     @ColumnInfo(name = "user_id")
     val userId: Long,

@@ -1,10 +1,13 @@
 package com.example.cv2.fragment
 
+import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.annotation.RequiresApi
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import com.example.cv2.R
@@ -13,6 +16,7 @@ import com.example.cv2.application.PubApplication
 import com.example.cv2.data.model.ContactViewModel
 import com.example.cv2.data.model.ContactViewModelFactory
 import com.example.cv2.databinding.FragmentAllFriendsBinding
+import com.example.cv2.utils.ConnectivityUtils
 
 class AllFriendsFragment : Fragment() {
 
@@ -25,6 +29,7 @@ class AllFriendsFragment : Fragment() {
         )
     }
 
+    @RequiresApi(Build.VERSION_CODES.M)
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -36,6 +41,8 @@ class AllFriendsFragment : Fragment() {
         val contactsRecyclerView = binding.friendListRecyclerView
 
         contactViewModel.fetchAllFriends()
+
+
         contactViewModel.entries.observe(viewLifecycleOwner) {
             contactsRecyclerView.adapter = ContactAdapter(view, contactViewModel)
         }

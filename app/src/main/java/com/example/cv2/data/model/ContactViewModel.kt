@@ -1,7 +1,9 @@
 package com.example.cv2.data.model
 
 import android.content.Context
+import android.os.Build
 import android.util.Log
+import androidx.annotation.RequiresApi
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -15,6 +17,7 @@ import com.example.cv2.data.response.ContactResponseBody
 import com.example.cv2.mapper.ContactResponseToEntityMapper
 import com.example.cv2.repository.ContactRepository
 import com.example.cv2.service.RetrofitFriendApi
+import com.example.cv2.utils.ConnectivityUtils
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
@@ -38,25 +41,32 @@ class ContactViewModel(
         _contacts.value = list
     }
 
+    @RequiresApi(Build.VERSION_CODES.M)
     @DelicateCoroutinesApi
     fun fetchAllFriends() {
 
-        GlobalScope.launch(Dispatchers.Main) {
-            val sharedPreference = context.getSharedPreferences(
-                "PREFERENCE_NAME", Context.MODE_PRIVATE)
-            val accessToken = "Bearer " + (sharedPreference?.getString("access", "defaultAccess") ?: "defaultAccess")
-            val uid = sharedPreference?.getString("uid", "defaultUid") ?: "defaultUid"
-            Log.i("accessToken", accessToken)
-            Log.i("uid", uid)
+        val sharedPreference = context.getSharedPreferences(
+            "PREFERENCE_NAME", Context.MODE_PRIVATE)
+        val accessToken = "Bearer " + (sharedPreference?.getString("access", "defaultAccess") ?: "defaultAccess")
+        val uid = sharedPreference?.getString("uid", "defaultUid") ?: "defaultUid"
 
-            val response: List<ContactResponseBody> = RetrofitFriendApi.RETOROFIT_SERVICE
-                .allFriends(accessToken , uid)
-            val contacts: MutableList<Contact> = ContactResponseToEntityMapper().entryListToPubList(
-                response.toMutableList(), uid.toLong())
+        if (ConnectivityUtils().isOnline(context!!)) {
+            GlobalScope.launch(Dispatchers.Main) {
 
-            _contacts.value = contacts
+                val response: List<ContactResponseBody> = RetrofitFriendApi.RETOROFIT_SERVICE
+                    .allFriends(accessToken , uid)
+                val contacts: MutableList<Contact> = ContactResponseToEntityMapper().entryListToPubList(
+                    response.toMutableList(), uid.toLong())
+                contactRepository.insert(contacts)
+                _contacts.value = contacts
 
             }
+        } else {
+            Log.e("NEMAS INTERNET", "A NEMAS ANI KAMARATOV")
+            val contacts: MutableList<Contact> = contactRepository.getAllByUserId(uid.toInt())
+            _contacts.value = contacts
+        }
+
         }
     }
 

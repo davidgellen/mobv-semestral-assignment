@@ -7,14 +7,17 @@ import com.example.cv2.data.entity.Contact
 @Dao
 interface ContactDao {
 
-    @Query("SELECT * FROM contact ORDER BY id ASC")
-    fun getAll() : LiveData<List<Contact>>
+    @Query("SELECT * FROM contact")
+    fun getAll() : MutableList<Contact>
 
-    @Query("SELECT * FROM contact WHERE id = :id ORDER BY id ASC")
-    fun getOne(id: Int): Contact
+    @Query("SELECT * FROM contact WHERE user_id = :userId")
+    fun getAllByUserId(userId: Int): MutableList<Contact>
 
-    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(contact: Contact)
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insert(contacts: List<Contact>)
 
     @Update
     suspend fun update(contact: Contact)

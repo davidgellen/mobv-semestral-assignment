@@ -10,7 +10,6 @@ class ContactResponseToEntityMapper {
         userId: Long
     ) : Contact {
         return Contact(
-            id = 0,
             userId = userId,
             contactId = contact.userId.toLong(),
             contactName = contact.username,
