@@ -85,7 +85,7 @@ class CheckInPubFragment : Fragment() {
                 val pub = (binding.checkInRecyclerView.adapter as CheckInPubAdapter).getPub()
                 if (pub == null) {
                     activity?.runOnUiThread {
-                        Toast.makeText( activity?.applicationContext, "ZIADNY PODNIK NENI ZVOLENY", Toast.LENGTH_SHORT).show()
+                        Toast.makeText( activity?.applicationContext, "ZIADNY PODNIK NIE JE ZVOLENY", Toast.LENGTH_SHORT).show()
                     }
                 } else {
                     GlobalScope.launch(Dispatchers.Main) {
@@ -94,9 +94,7 @@ class CheckInPubFragment : Fragment() {
                         val accessToken = "Bearer " + (sharedPreference?.getString("access", "defaultAccess") ?: "defaultAccess")
                         val uid = sharedPreference?.getString("uid", "defaultUid") ?: "defaultUid"
                         val body = CheckIntoPubRequestBody(pub.importedId.toString(), pub.name!!, "node", pub.lat!!, pub.lon!!)
-                        val response = RetrofitNewPubApi.RETROFIT_SERVICE
-                            .checkIntoPub(accessToken, uid, body)
-//                        findNavController().navigate(R.id.action_checkInPubFragment_to_allEntriesFragment)
+                        val response = RetrofitNewPubApi.RETROFIT_SERVICE.checkIntoPub(accessToken, uid, body)
                     }
                 }
             }

@@ -83,7 +83,7 @@ class AllEntriesFragment : Fragment() {
     private fun sortByProperty(
         currentId: Int
     ) {
-        if (!currentSort.equals(currentId.toString())) {
+        if (currentSort != currentId.toString()) {
             when (currentId) {
                 R.id.menuSortPubName -> pubViewModel.entries.value?.sortBy { it.name }
                 R.id.menuSortPubDistance -> pubViewModel.entries.value?.sortBy { it.distance }

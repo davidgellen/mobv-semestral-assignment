@@ -64,9 +64,9 @@ class EntryDetailFragment : Fragment() {
             }
         }
 
-        binding.editDeleteCurrent.setOnClickListener {
-            findNavController().navigate(R.id.action_entryDetailFragment_to_allEntriesFragment)
-        }
+//        binding.editDeleteCurrent.setOnClickListener {
+//            findNavController().navigate(R.id.action_entryDetailFragment_to_allEntriesFragment)
+//        }
 
         return binding.root
     }

@@ -62,7 +62,7 @@ class ContactViewModel(
 
             }
         } else {
-            Log.e("NEMAS INTERNET", "A NEMAS ANI KAMARATOV")
+            Log.e("NO INTERNET", "LOADING CONTACTS FROM DATABASE")
             val contacts: MutableList<Contact> = contactRepository.getAllByUserId(uid.toInt())
             _contacts.value = contacts
         }

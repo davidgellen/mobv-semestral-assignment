@@ -17,7 +17,7 @@ class CheckInPubAdapter(
     private val checkInPubViewModel: CheckInPubViewModel
 ) : RecyclerView.Adapter<CheckInPubAdapter.PubViewHolder>() {
 
-    private var currentPub: Pub? = null
+    private lateinit var currentPub: Pub
     private var currentPosition = 0
 
     fun getPub() : Pub? {
@@ -33,6 +33,7 @@ class CheckInPubAdapter(
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PubViewHolder {
         val adapterLayout = LayoutInflater.from(parent.context)
             .inflate(R.layout.check_in_pub_item, parent, false)
+        currentPub = checkInPubViewModel.pubs.value?.get(0)!!
         return PubViewHolder(adapterLayout)
     }
 
@@ -46,7 +47,7 @@ class CheckInPubAdapter(
         holder.textView.text = "${item?.name} (${item?.distance} km)"
         holder.itemView.setOnClickListener {
             holder.lottieCheckBox.playAnimation()
-            currentPub = checkInPubViewModel.pubs.value?.get(position)
+            currentPub = checkInPubViewModel.pubs.value?.get(position)!!
             notifyDataSetChanged()
             currentPosition = position
         }
