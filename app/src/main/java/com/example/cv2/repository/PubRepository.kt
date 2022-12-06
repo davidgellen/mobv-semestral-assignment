@@ -8,6 +8,8 @@ class PubRepository(
     private val pubDao: PubDao
 ) {
 
-    val pubs: LiveData<List<Pub>> = pubDao.getAll()
+    fun getAll() : LiveData<List<Pub>> {
+        return pubDao.getAll()
+    }
 
 }

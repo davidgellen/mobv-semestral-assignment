@@ -20,7 +20,7 @@ class AllFriendsFragment : Fragment() {
 
     private val contactViewModel: ContactViewModel by activityViewModels() {
         ContactViewModelFactory(
-            (activity?.application as PubApplication).database.contactDao(),
+            (activity?.application as PubApplication).contactRepository,
             (activity?.application as PubApplication)
         )
     }

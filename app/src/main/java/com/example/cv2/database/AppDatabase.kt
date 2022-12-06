@@ -7,9 +7,10 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import com.example.cv2.dao.ContactDao
 import com.example.cv2.dao.PubDao
+import com.example.cv2.data.entity.Contact
 import com.example.cv2.data.entity.Pub
 
-@Database(entities = [Pub::class], version = 1, exportSchema = false)
+@Database(entities = [Pub::class, Contact::class], version = 1, exportSchema = false)
 abstract class AppDatabase : RoomDatabase() {
 
     abstract fun pubDao(): PubDao

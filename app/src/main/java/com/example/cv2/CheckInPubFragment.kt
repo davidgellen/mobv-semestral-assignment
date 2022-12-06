@@ -51,7 +51,7 @@ class CheckInPubFragment : Fragment() {
 
     private val checkInPubViewModel: CheckInPubViewModel by activityViewModels() {
         CheckInPubViewModelFactory(
-            (activity?.application as PubApplication).database.pubDao(),
+            (activity?.application as PubApplication).pubRepository,
             (activity?.application as PubApplication)
         )
     }
@@ -104,84 +104,5 @@ class CheckInPubFragment : Fragment() {
 
         return view
     }
-
-//    @RequiresApi(Build.VERSION_CODES.N)
-//    @DelicateCoroutinesApi
-//    fun loadPubsInArea() {
-//
-//
-////        // default for FEI
-////        var lat = "48.143483"
-////        var lon = "17.108513"
-//
-//        GlobalScope.launch(Dispatchers.Main) {
-//
-//            Log.e("LAT", lat)
-//            Log.e("LON", lon)
-//
-//            val data = "[out:json];node(around:250, $lat, $lon);(node(around:250)[\"amenity\"~\"^pub\$|^bar\$|^restaurant\$|^cafe\$|^fast_food\$|^stripclub\$|^nightclub\$\"];);out body;>;out skel;"
-//
-//            val pubsResponse = RetrofitOverpassApi.RETROFIT_SERVICE
-//                .getPubsInArea(data)
-//            Log.i("fetched pubs", pubsResponse.elements.size.toString())
-//
-//            val pubs = PubMapper().entryListToPubList(pubsResponse.elements.toMutableList())
-//            for (pub in pubs) {
-//                val distance = DistanceUtils().distanceInKm(lat.toDouble(), lon.toDouble(), pub.lat!!, pub.lon!!)
-//                pub.distance = distance.toBigDecimal().setScale(3, RoundingMode.UP).toDouble()
-//            }
-//            pubs.sortBy{ it.distance }
-//
-//            val recyclerView = binding.checkInRecyclerView
-//            checkInPubViewModel.setPubs(pubs)
-//            recyclerView.adapter =
-//                checkInPubViewModel.pubs.value?.let { CheckInPubAdapter(view!!, pubs) }
-////                activity?.applicationContext?.let { CheckInPubAdapter(it, pubs) }
-//
-//            binding.checkInPubConfirmButton.setOnClickListener {
-//                binding.animationView4.playAnimation()
-//                val pub = (binding.checkInRecyclerView.adapter as CheckInPubAdapter).getPub()
-//                if (pub == null) {
-//                    activity?.runOnUiThread {
-//                        Toast.makeText( activity?.applicationContext, "ZIADNY PODNIK NENI ZVOLENY", Toast.LENGTH_SHORT).show()
-//                    }
-//                } else {
-//                    GlobalScope.launch(Dispatchers.Main) {
-//                        val sharedPreference = activity?.applicationContext?.getSharedPreferences(
-//                            "PREFERENCE_NAME", Context.MODE_PRIVATE)
-//                        val accessToken = "Bearer " + (sharedPreference?.getString("access", "defaultAccess") ?: "defaultAccess")
-//                        val uid = sharedPreference?.getString("uid", "defaultUid") ?: "defaultUid"
-//                        val body = CheckIntoPubRequestBody(pub.importedId.toString(), pub.name!!, "node", pub.lat!!, pub.lon!!)
-//                        val response = RetrofitNewPubApi.RETROFIT_SERVICE
-//                            .checkIntoPub(accessToken, uid, body)
-////                        findNavController().navigate(R.id.action_checkInPubFragment_to_allEntriesFragment)
-//                    }
-//                }
-//            }
-//
-//        }
-//    }
-//
-//    @DelicateCoroutinesApi
-//    @RequiresApi(Build.VERSION_CODES.N)
-//    private fun fetchLocation(
-//        useFei: Boolean
-//    ) {
-//        val task = fusedLocationProviderClient.lastLocation
-//        if (context?.let { ActivityCompat.checkSelfPermission(it, Manifest.permission.ACCESS_FINE_LOCATION) } != PackageManager.PERMISSION_GRANTED &&
-//            context?.let { ActivityCompat.checkSelfPermission(it, Manifest.permission.ACCESS_COARSE_LOCATION) } != PackageManager.PERMISSION_GRANTED) {
-//            activity?.let { ActivityCompat.requestPermissions(it, arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), 101) }
-//        }
-//        task.addOnSuccessListener {
-//            if (useFei) {
-//                lat = "48.143483"
-//                lon = "17.108513"
-//            } else {
-//                lat = it.latitude.toString()
-//                lon = it.longitude.toString()
-//            }
-//            loadPubsInArea()
-//        }
-//    }
 
 }

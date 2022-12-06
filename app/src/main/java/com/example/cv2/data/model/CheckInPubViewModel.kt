@@ -11,6 +11,7 @@ import com.example.cv2.application.PubApplication
 import com.example.cv2.dao.PubDao
 import com.example.cv2.data.entity.Pub
 import com.example.cv2.mapper.PubMapper
+import com.example.cv2.repository.PubRepository
 import com.example.cv2.service.RetrofitOverpassApi
 import com.example.cv2.utils.DistanceUtils
 import com.google.android.gms.location.FusedLocationProviderClient
@@ -21,7 +22,7 @@ import kotlinx.coroutines.launch
 import java.math.RoundingMode
 
 class CheckInPubViewModel(
-    private val pubDao: PubDao,
+    private val pubRepository: PubRepository,
     application: PubApplication
 ) : ViewModel() {
 
@@ -98,13 +99,13 @@ class CheckInPubViewModel(
 }
 
 class CheckInPubViewModelFactory(
-    private val pubDao: PubDao,
+    private val pubRepository: PubRepository,
     private val application: PubApplication
 ) : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(CheckInPubViewModel::class.java)) {
             @Suppress("UNCHECKED_CAST")
-            return CheckInPubViewModel(pubDao, application) as T
+            return CheckInPubViewModel(pubRepository, application) as T
         }
         throw IllegalArgumentException("Unknown ViewModel class")
     }

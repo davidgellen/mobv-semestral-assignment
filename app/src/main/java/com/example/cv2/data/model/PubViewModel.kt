@@ -10,6 +10,7 @@ import com.example.cv2.data.request.RefreshTokenRequestBody
 import com.example.cv2.data.response.PubResponseBody
 import com.example.cv2.data.response.RegisterResponseBody
 import com.example.cv2.mapper.PubMapper
+import com.example.cv2.repository.PubRepository
 import com.example.cv2.service.RetrofitNewPubApi
 import com.example.cv2.service.RetrofitUserApi
 import com.example.cv2.utils.DistanceUtils
@@ -23,7 +24,7 @@ import retrofit2.Response
 import java.math.RoundingMode
 
 class PubViewModel(
-    private val pubDao: PubDao,
+    private val pubRepository: PubRepository,
     application: PubApplication
 ) : AndroidViewModel(application) {
 
@@ -47,13 +48,13 @@ class PubViewModel(
     fun insertPub(
         pub: Pub
     ) {
-        viewModelScope.launch {
-            pubDao.insert(pub)
-        }
+//        viewModelScope.launch {
+//            pubRepository.insert(pub)
+//        }
     }
 
     fun getAllEntries() {
-        pubDao.getAll()
+        pubRepository.getAll()
     }
 
     @DelicateCoroutinesApi
@@ -128,14 +129,14 @@ class PubViewModel(
 }
 
 class PubViewModelFactory(
-    private val pubDao: PubDao,
+    private val pubRepository: PubRepository,
     private val application: PubApplication
 ) : ViewModelProvider.Factory {
 
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(PubViewModel::class.java)) {
             @Suppress("UNCHECKED_CAST")
-            return PubViewModel(pubDao, application) as T
+            return PubViewModel(pubRepository, application) as T
         }
         throw IllegalArgumentException("Unknown ViewModel class")
     }

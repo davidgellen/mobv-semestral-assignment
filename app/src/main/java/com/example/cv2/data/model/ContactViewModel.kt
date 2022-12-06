@@ -13,6 +13,7 @@ import com.example.cv2.dao.ContactDao
 import com.example.cv2.data.entity.Contact
 import com.example.cv2.data.response.ContactResponseBody
 import com.example.cv2.mapper.ContactResponseToEntityMapper
+import com.example.cv2.repository.ContactRepository
 import com.example.cv2.service.RetrofitFriendApi
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.Dispatchers
@@ -20,7 +21,7 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
 class ContactViewModel(
-    private val contactDao: ContactDao,
+    private val contactRepository: ContactRepository,
     application: PubApplication
 ): ViewModel() {
 
@@ -61,13 +62,13 @@ class ContactViewModel(
 
 
 class ContactViewModelFactory(
-    private val contactDao: ContactDao,
+    private val contactRepository: ContactRepository,
     private val application: PubApplication
 ) : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(ContactViewModel::class.java)) {
             @Suppress("UNCHECKED_CAST")
-            return ContactViewModel(contactDao, application) as T
+            return ContactViewModel(contactRepository, application) as T
         }
         throw IllegalArgumentException("Unknown ViewModel class")
     }

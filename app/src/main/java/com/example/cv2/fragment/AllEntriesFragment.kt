@@ -26,7 +26,7 @@ class AllEntriesFragment : Fragment() {
 
     private val pubViewModel: PubViewModel by activityViewModels() {
         PubViewModelFactory(
-            (activity?.application as PubApplication).database.pubDao(),
+            (activity?.application as PubApplication).pubRepository,
             activity?.application as PubApplication
         )
     }
