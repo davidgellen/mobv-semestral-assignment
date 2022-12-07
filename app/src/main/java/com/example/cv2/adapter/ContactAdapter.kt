@@ -10,7 +10,6 @@ import androidx.navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.example.cv2.R
 import com.example.cv2.data.model.ContactViewModel
-import com.example.cv2.mapper.PubMapper
 
 class ContactAdapter(
     private val context: View,
@@ -39,7 +38,7 @@ class ContactAdapter(
                 view.findNavController()
                     .navigate(R.id.action_allFriendsFragment_to_entryDetailFragment, bundle)
             }
-            holder.textView.text = "${contactViewModel.entries.value?.get(position)?.contactName} + (${contactViewModel.entries.value?.get(position)?.barName})"
+            holder.textView.text = "${contactViewModel.entries.value?.get(position)?.contactName} (${contactViewModel.entries.value?.get(position)?.barName})"
         } else {
             holder.textView.text = "${contactViewModel.entries.value?.get(position)?.contactName}"
         }

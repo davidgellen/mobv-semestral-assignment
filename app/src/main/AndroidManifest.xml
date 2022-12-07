@@ -17,6 +17,7 @@
         android:name=".application.PubApplication"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
+        android:screenOrientation="portrait"
         android:theme="@style/Theme.CV2">
         <activity android:name=".MainActivity"
                     android:exported="true">

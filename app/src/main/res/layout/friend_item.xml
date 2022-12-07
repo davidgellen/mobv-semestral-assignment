@@ -3,8 +3,8 @@
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_gravity="center"
     android:layout_height="wrap_content"
+    android:layout_gravity="center"
     android:layout_margin="20dp">
     <!-- A CardView that contains a TextView -->
     <androidx.cardview.widget.CardView
@@ -12,7 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="80dp"
         android:layout_gravity="center_horizontal"
-        card_view:cardBackgroundColor="#89F3E3"
+        card_view:cardBackgroundColor="#F9A825"
         card_view:cardCornerRadius="10dp">
 
         <TextView
@@ -21,6 +21,8 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_margin="5sp"
+            android:autoText="true"
+            android:text="JOZEFINA (KOTOLNA)"
             android:textSize="20sp" />
 
     </androidx.cardview.widget.CardView>

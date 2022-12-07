@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layout_gravity="center_vertical"
     tools:context=".fragment.RegisterFragment">
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -17,6 +18,8 @@
             android:layout_marginTop="96dp"
             android:ems="10"
             android:hint="Meno"
+            android:ellipsize="start"
+            android:gravity="center_horizontal"
             android:inputType="textPersonName"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -28,7 +31,10 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="32dp"
             android:ems="10"
+            android:hint="Heslo"
             android:inputType="textPassword"
+            android:ellipsize="start"
+            android:gravity="center_horizontal"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
@@ -40,6 +46,9 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="32dp"
             android:ems="10"
+            android:hint="Opakuj Heslo"
+            android:ellipsize="start"
+            android:gravity="center_horizontal"
             android:inputType="textPassword"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
