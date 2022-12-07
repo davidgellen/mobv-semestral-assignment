@@ -2,6 +2,7 @@ package com.example.cv2.data.model
 
 import android.os.Build
 import android.util.Log
+import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -63,11 +64,12 @@ class CheckInPubViewModel(
                 .getPubsInArea(data)
             Log.i("fetched pubs", pubsResponse.elements.size.toString())
 
-            val pubs = PubMapper().entryListToPubList(pubsResponse.elements.toMutableList())
+            var pubs = PubMapper().entryListToPubList(pubsResponse.elements.toMutableList())
             for (pub in pubs) {
                 val distance = DistanceUtils().distanceInKm(lat.toDouble(), lon.toDouble(), pub.lat!!, pub.lon!!)
                 pub.distance = distance.toBigDecimal().setScale(3, RoundingMode.UP).toDouble()
             }
+            pubs = (pubs.filter { it.name != null && it.name.isNotEmpty() }) as MutableList<Pub>
             pubs.sortBy{ it.distance }
             setPubs(pubs)
 
@@ -84,15 +86,24 @@ class CheckInPubViewModel(
 //            context?.let { ActivityCompat.checkSelfPermission(it, Manifest.permission.ACCESS_COARSE_LOCATION) } != PackageManager.PERMISSION_GRANTED) {
 //            activity?.let { ActivityCompat.requestPermissions(it, arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), 101) }
 //        }
-        task?.addOnSuccessListener {
-            if (useFei) {
-                lat = "48.143483"
-                lon = "17.108513"
-            } else {
-                lat = it.latitude.toString()
-                lon = it.longitude.toString()
+        if (task == null) {
+                Toast.makeText(context!!, "NIE JE ZAPNUTE GPS", Toast.LENGTH_LONG).show()
+        } else {
+            task.addOnSuccessListener {
+                if (useFei) {
+                    lat = "48.143483"
+                    lon = "17.108513"
+                } else {
+                    if (it == null) {
+                        Toast.makeText(context!!, "NIE JE ZAPNUTE GPS", Toast.LENGTH_LONG).show()
+                        return@addOnSuccessListener
+                    } else {
+                        lat = it.latitude.toString()
+                        lon = it.longitude.toString()
+                    }
+                }
+                loadPubsInArea()
             }
-            loadPubsInArea()
         }
     }
 

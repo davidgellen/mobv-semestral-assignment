@@ -31,6 +31,7 @@ import com.example.cv2.databinding.FragmentCheckInPubBinding
 import com.example.cv2.mapper.PubMapper
 import com.example.cv2.service.RetrofitNewPubApi
 import com.example.cv2.service.RetrofitOverpassApi
+import com.example.cv2.utils.ConnectivityUtils
 import com.example.cv2.utils.DistanceUtils
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
@@ -76,25 +77,52 @@ class CheckInPubFragment : Fragment() {
         val recyclerView = binding.checkInRecyclerView
 //        recyclerView.adapter =
 //            activity?.applicationContext?.let { CheckInPubAdapter(view, mutableListOf()) }
-
-        checkInPubViewModel.fetchLocation(false)
+        if (ConnectivityUtils().isOnline(context!!)) {
+            checkInPubViewModel.fetchLocation(false)
+        } else {
+            Toast.makeText(context!!, "CHYBA PRISTUP K INTERNETU", Toast.LENGTH_LONG).show()
+        }
         checkInPubViewModel.pubs.observe(viewLifecycleOwner) {
             recyclerView.adapter = CheckInPubAdapter(view, checkInPubViewModel)
             binding.checkInPubConfirmButton.setOnClickListener {
-                binding.animationView4.playAnimation()
+//                if (ConnectivityUtils().isOnline(context!!)) {
+//                    checkInPubViewModel.fetchLocation(false)
+//                } else {
+//                    Toast.makeText(context!!, "CHYBA PRISTUP K INTERNETU", Toast.LENGTH_LONG).show()
+//                }
                 val pub = (binding.checkInRecyclerView.adapter as CheckInPubAdapter).getPub()
                 if (pub == null) {
                     activity?.runOnUiThread {
                         Toast.makeText( activity?.applicationContext, "ZIADNY PODNIK NIE JE ZVOLENY", Toast.LENGTH_SHORT).show()
                     }
                 } else {
-                    GlobalScope.launch(Dispatchers.Main) {
-                        val sharedPreference = activity?.applicationContext?.getSharedPreferences(
-                            "PREFERENCE_NAME", Context.MODE_PRIVATE)
-                        val accessToken = "Bearer " + (sharedPreference?.getString("access", "defaultAccess") ?: "defaultAccess")
-                        val uid = sharedPreference?.getString("uid", "defaultUid") ?: "defaultUid"
-                        val body = CheckIntoPubRequestBody(pub.importedId.toString(), pub.name!!, "node", pub.lat!!, pub.lon!!)
-                        val response = RetrofitNewPubApi.RETROFIT_SERVICE.checkIntoPub(accessToken, uid, body)
+                    if (ConnectivityUtils().isOnline(context!!)) {
+                        binding.animationView4.playAnimation()
+                        GlobalScope.launch(Dispatchers.Main) {
+                            val sharedPreference =
+                                activity?.applicationContext?.getSharedPreferences(
+                                    "PREFERENCE_NAME", Context.MODE_PRIVATE
+                                )
+                            val accessToken =
+                                "Bearer " + (sharedPreference?.getString("access", "defaultAccess")
+                                    ?: "defaultAccess")
+                            val uid =
+                                sharedPreference?.getString("uid", "defaultUid") ?: "defaultUid"
+                            val body = CheckIntoPubRequestBody(
+                                pub.importedId.toString(),
+                                pub.name!!,
+                                "node",
+                                pub.lat!!,
+                                pub.lon!!
+                            )
+                            val response = RetrofitNewPubApi.RETROFIT_SERVICE.checkIntoPub(
+                                accessToken,
+                                uid,
+                                body
+                            )
+                        }
+                    } else {
+                        Toast.makeText(context!!, "CHYBA PRISTUP K INTERNETU", Toast.LENGTH_LONG).show()
                     }
                 }
             }

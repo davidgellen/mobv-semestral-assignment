@@ -40,9 +40,9 @@ class MainActivity : AppCompatActivity() {
             "PREFERENCE_NAME", Context.MODE_PRIVATE
         )
 
-        val editor = sharedPreference?.edit()
-        editor?.clear()
-        editor?.apply()
+//        val editor = sharedPreference?.edit()
+//        editor?.clear()
+//        editor?.apply()
 
         val accessToken = sharedPreference?.getString("access", null)
 

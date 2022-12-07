@@ -4,10 +4,7 @@ import android.content.Context
 import android.os.Build
 import android.util.Log
 import androidx.annotation.RequiresApi
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.*
 import androidx.recyclerview.widget.RecyclerView
 import com.example.cv2.adapter.ContactAdapter
 import com.example.cv2.application.PubApplication
@@ -25,12 +22,14 @@ import kotlinx.coroutines.launch
 
 class ContactViewModel(
     private val contactRepository: ContactRepository,
-    application: PubApplication
+    private val application: PubApplication
 ): ViewModel() {
 
     private val context by lazy { application.applicationContext }
 
     private var _contacts = MutableLiveData<MutableList<Contact>>()
+
+    private val connectivityUtils = ConnectivityUtils()
 
     val entries: LiveData<MutableList<Contact>>
         get() = _contacts
@@ -49,10 +48,8 @@ class ContactViewModel(
             "PREFERENCE_NAME", Context.MODE_PRIVATE)
         val accessToken = "Bearer " + (sharedPreference?.getString("access", "defaultAccess") ?: "defaultAccess")
         val uid = sharedPreference?.getString("uid", "defaultUid") ?: "defaultUid"
-
-        if (ConnectivityUtils().isOnline(context!!)) {
-            GlobalScope.launch(Dispatchers.Main) {
-
+        if (connectivityUtils.isOnline(context!!)) {
+            viewModelScope.launch(Dispatchers.Main) {
                 val response: List<ContactResponseBody> = RetrofitFriendApi.RETOROFIT_SERVICE
                     .allFriends(accessToken , uid)
                 val contacts: MutableList<Contact> = ContactResponseToEntityMapper().entryListToPubList(
