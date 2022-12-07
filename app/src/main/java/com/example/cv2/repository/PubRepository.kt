@@ -1,6 +1,5 @@
 package com.example.cv2.repository
 
-import androidx.lifecycle.LiveData
 import com.example.cv2.dao.PubDao
 import com.example.cv2.data.entity.Pub
 

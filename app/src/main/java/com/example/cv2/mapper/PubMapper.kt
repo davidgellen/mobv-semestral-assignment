@@ -40,10 +40,10 @@ class PubMapper {
             importedId = pub.barId.toLong(),
             lat = pub.lat?.toDouble(),
             lon = pub.lon?.toDouble(),
-            phone = "TODO",
+            phone = "",
             name = pub.barName,
-            openingHours = "TODO",
-            website = "TODO",
+            openingHours = "",
+            website = "",
             users = pub.users)
     }
 

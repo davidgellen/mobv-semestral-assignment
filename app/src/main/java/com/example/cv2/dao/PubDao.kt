@@ -1,6 +1,5 @@
 package com.example.cv2.dao
 
-import androidx.lifecycle.LiveData
 import androidx.room.*
 import com.example.cv2.data.entity.Pub
 import kotlinx.coroutines.flow.Flow
