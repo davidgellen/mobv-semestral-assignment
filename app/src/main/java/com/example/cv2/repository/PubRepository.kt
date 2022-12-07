@@ -11,6 +11,10 @@ class PubRepository(
         return pubDao.getAll()
     }
 
+    fun getByImportedId(importedId: Long) : Pub {
+        return pubDao.getByImportedId(importedId)
+    }
+
     suspend fun insert(
         pubs: List<Pub>
     ) {

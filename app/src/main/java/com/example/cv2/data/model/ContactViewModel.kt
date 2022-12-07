@@ -34,6 +34,10 @@ class ContactViewModel(
     val entries: LiveData<MutableList<Contact>>
         get() = _contacts
 
+    fun getApplication() : PubApplication {
+        return application
+    }
+
     fun setContacts(
         list: MutableList<Contact>
     ) {

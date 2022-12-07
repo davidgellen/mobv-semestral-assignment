@@ -1,6 +1,7 @@
 package com.example.cv2.adapter
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,6 +10,7 @@ import androidx.navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.example.cv2.R
 import com.example.cv2.data.model.ContactViewModel
+import com.example.cv2.mapper.PubMapper
 
 class ContactAdapter(
     private val context: View,
@@ -30,7 +32,10 @@ class ContactAdapter(
             holder.itemView.setOnClickListener { view ->
                 val bundle = Bundle()
                 bundle.putLong("pubApiId", contactViewModel.entries.value?.get(position)?.barId!!.toLong())
-                bundle.putLong("users", contactViewModel.entries.value?.get(position)?.userId!!)
+                val pub = contactViewModel.getApplication().pubRepository.getByImportedId(contactViewModel.entries.value?.get(position)?.barId!!.toLong())
+                bundle.putSerializable("entry", pub)
+                bundle.putSerializable("users", pub.users)
+                Log.e("BINDED PICOVINA", "KOKOT")
                 view.findNavController()
                     .navigate(R.id.action_allFriendsFragment_to_entryDetailFragment, bundle)
             }

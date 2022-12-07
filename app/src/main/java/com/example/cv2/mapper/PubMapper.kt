@@ -1,5 +1,6 @@
 package com.example.cv2.mapper
 
+import com.example.cv2.data.entity.Contact
 import com.example.cv2.data.entity.Pub
 import com.example.cv2.data.jsonmapper.Entry
 import com.example.cv2.data.response.PubResponseBody
@@ -55,6 +56,23 @@ class PubMapper {
             pubs.add(pubResponseToPubEntity(entry))
         }
         return pubs
+    }
+
+    fun contactToEntryPub(
+        contact: Contact
+    ) : Pub {
+        return Pub(
+            id = 0,
+            importedId = contact.barId?.toLong(),
+            lat = contact.barLat?.toDouble(),
+            lon = contact.barLon?.toDouble(),
+            phone = null,
+            name = contact.barName,
+            openingHours = null,
+            website = null,
+            users = null,
+            distance = null
+        )
     }
 
 }
