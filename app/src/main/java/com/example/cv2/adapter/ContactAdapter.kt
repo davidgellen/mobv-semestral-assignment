@@ -34,7 +34,6 @@ class ContactAdapter(
                 val pub = contactViewModel.getApplication().pubRepository.getByImportedId(contactViewModel.entries.value?.get(position)?.barId!!.toLong())
                 bundle.putSerializable("entry", pub)
                 bundle.putSerializable("users", pub.users)
-                Log.e("BINDED PICOVINA", "KOKOT")
                 view.findNavController()
                     .navigate(R.id.action_allFriendsFragment_to_entryDetailFragment, bundle)
             }

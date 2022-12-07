@@ -21,8 +21,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_margin="5sp"
-            android:autoText="true"
-            android:text="JOZEFINA (KOTOLNA)"
+            android:text=""
             android:textSize="20sp" />
 
     </androidx.cardview.widget.CardView>

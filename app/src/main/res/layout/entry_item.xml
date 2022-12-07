@@ -12,7 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="80dp"
         android:layout_gravity="center_horizontal"
-        card_view:cardBackgroundColor="#89F3E3"
+        card_view:cardBackgroundColor="#F9A825"
         card_view:cardCornerRadius="10dp">
 
         <TextView
