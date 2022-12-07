@@ -1,7 +1,10 @@
 package com.example.cv2.data.model
 
 import android.content.Context
+import android.os.Build
 import android.util.Log
+import android.widget.Toast
+import androidx.annotation.RequiresApi
 import androidx.lifecycle.*
 import com.example.cv2.application.PubApplication
 import com.example.cv2.dao.PubDao
@@ -13,6 +16,7 @@ import com.example.cv2.mapper.PubMapper
 import com.example.cv2.repository.PubRepository
 import com.example.cv2.service.RetrofitNewPubApi
 import com.example.cv2.service.RetrofitUserApi
+import com.example.cv2.utils.ConnectivityUtils
 import com.example.cv2.utils.DistanceUtils
 import com.google.android.gms.location.FusedLocationProviderClient
 import kotlinx.coroutines.DelicateCoroutinesApi
@@ -45,43 +49,62 @@ class PubViewModel(
         _entries.value = list
     }
 
-    fun insertPub(
-        pub: Pub
-    ) {
-//        viewModelScope.launch {
-//            pubRepository.insert(pub)
-//        }
-    }
-
-    fun getAllEntries() {
-        pubRepository.getAll()
-    }
-
+    @RequiresApi(Build.VERSION_CODES.M)
     @DelicateCoroutinesApi
     fun loadData(useFei: Boolean) {
-        val task = fusedLocationProviderClient?.lastLocation
-//        if (context?.let { ActivityCompat.checkSelfPermission(it, Manifest.permission.ACCESS_FINE_LOCATION) } != PackageManager.PERMISSION_GRANTED &&
-//            context?.let { ActivityCompat.checkSelfPermission(it, Manifest.permission.ACCESS_COARSE_LOCATION) } != PackageManager.PERMISSION_GRANTED) {
-//            activity?.let { ActivityCompat.requestPermissions(it, arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), 101) }
-//        }
-        task?.addOnSuccessListener {
-            if (useFei) {
-                lat = "48.143483"
-                lon = "17.108513"
-            } else {
-                lat = it.latitude.toString()
-                lon = it.longitude.toString()
-            }
-            Log.e("lat", lat)
-            Log.e("lon", lon)
-            GlobalScope.launch(Dispatchers.Main) {
-                val resp = loadJsonFromServer()
-                val fetchedEntries = resp.toMutableList()
-                for (pub in fetchedEntries) {
-                    val distance = DistanceUtils().distanceInKm(lat.toDouble(), lon.toDouble(), pub.lat!!, pub.lon!!)
-                    pub.distance = distance.toBigDecimal().setScale(3, RoundingMode.UP).toDouble()
+            val task = fusedLocationProviderClient?.lastLocation
+            task?.addOnSuccessListener {
+                if (useFei) {
+                    lat = "48.143483"
+                    lon = "17.108513"
+                } else {
+                    if (it == null) {
+                        Toast.makeText(context!!, "NIE JE ZAPNUTE GPS, it == null", Toast.LENGTH_SHORT).show()
+                        lat = ""
+                        lon = ""
+                    } else {
+                        lat = it.latitude.toString()
+                        lon = it.longitude.toString()
+                    }
                 }
-                _entries.value = fetchedEntries
+                Log.e("lat", lat)
+                Log.e("lon", lon)
+                if (ConnectivityUtils().isOnline(context!!)) {
+
+                    GlobalScope.launch(Dispatchers.Main) {
+                    val resp = loadJsonFromServer()
+                    val fetchedEntries = resp.toMutableList()
+                    pubRepository.deleteAll()
+                    pubRepository.insert(fetchedEntries)
+                    for (pub in fetchedEntries) {
+                        try {
+                            val distance = DistanceUtils().distanceInKm(
+                                lat.toDouble(),
+                                lon.toDouble(),
+                                pub.lat!!,
+                                pub.lon!!
+                            )
+                            pub.distance =
+                                distance.toBigDecimal().setScale(3, RoundingMode.UP).toDouble()
+                        } catch ( e: NumberFormatException) {
+
+                        }
+                    }
+                    _entries.value = fetchedEntries
+
+                }
+            } else {
+                Log.e("NO INTERNET", "FETCHING PUBS FROM DATABASE")
+                val pubsFromDb = pubRepository.getAll()
+                for (pub in pubsFromDb) {
+                    try {
+                        val distance = DistanceUtils().distanceInKm(lat.toDouble(), lon.toDouble(), pub.lat!!, pub.lon!!)
+                        pub.distance = distance.toBigDecimal().setScale(3, RoundingMode.UP).toDouble()
+                    } catch (e: java.lang.NumberFormatException) {
+
+                    }
+                }
+                _entries.value = pubsFromDb
             }
         }
     }

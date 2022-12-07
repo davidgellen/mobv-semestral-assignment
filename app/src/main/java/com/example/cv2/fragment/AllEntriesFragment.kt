@@ -1,7 +1,9 @@
 package com.example.cv2.fragment
 
+import android.os.Build
 import android.os.Bundle
 import android.view.*
+import androidx.annotation.RequiresApi
 import androidx.core.view.MenuProvider
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -18,7 +20,8 @@ import com.google.android.gms.location.LocationServices
 
 class AllEntriesFragment : Fragment() {
 
-    private lateinit var binding: FragmentAllEntriesBinding
+    private var _binding: FragmentAllEntriesBinding? = null
+    private val binding get() = _binding!!
     private lateinit var fusedLocationProviderClient: FusedLocationProviderClient
     private lateinit var lat : String
     private lateinit var lon : String
@@ -31,20 +34,23 @@ class AllEntriesFragment : Fragment() {
         )
     }
 
+    @RequiresApi(Build.VERSION_CODES.M)
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        binding = FragmentAllEntriesBinding.inflate(inflater, container, false)
+        _binding = FragmentAllEntriesBinding.inflate(inflater, container, false)
         // Inflate the layout for this fragment
         val view = binding.root
         fusedLocationProviderClient = activity?.let {
             LocationServices.getFusedLocationProviderClient(it)
         }!!
         pubViewModel.fusedLocationProviderClient = fusedLocationProviderClient
+        currentSort = "none"
 
         val recyclerView = binding.enttriesRecycleView
-        currentSort = "none"
+//        recyclerView.adapter = PubAdapter(view, pubViewModel)
+
         pubViewModel.loadData(false)
         pubViewModel.entries.observe(viewLifecycleOwner) {
             recyclerView.adapter = PubAdapter(view, pubViewModel)
@@ -96,6 +102,11 @@ class AllEntriesFragment : Fragment() {
             pubViewModel.entries.value?.reverse()
             (binding.enttriesRecycleView.adapter as PubAdapter).notifyDataSetChanged()
         }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        _binding = null
     }
 
 }

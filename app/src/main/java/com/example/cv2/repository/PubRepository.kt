@@ -8,8 +8,18 @@ class PubRepository(
     private val pubDao: PubDao
 ) {
 
-    fun getAll() : LiveData<List<Pub>> {
+    fun getAll() : MutableList<Pub> {
         return pubDao.getAll()
+    }
+
+    suspend fun insert(
+        pubs: List<Pub>
+    ) {
+        return pubDao.insert(pubs)
+    }
+
+    suspend fun deleteAll() {
+        pubDao.deleteAll()
     }
 
 }

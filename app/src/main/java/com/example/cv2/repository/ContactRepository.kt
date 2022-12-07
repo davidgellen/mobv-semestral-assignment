@@ -18,7 +18,7 @@ class ContactRepository(
     suspend fun insert(
         contacts: List<Contact>
     ) {
-        return contactDao.insert(contacts);
+        contactDao.insert(contacts);
     }
 
 }

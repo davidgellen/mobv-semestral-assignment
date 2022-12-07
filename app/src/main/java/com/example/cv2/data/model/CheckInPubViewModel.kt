@@ -69,7 +69,7 @@ class CheckInPubViewModel(
                 val distance = DistanceUtils().distanceInKm(lat.toDouble(), lon.toDouble(), pub.lat!!, pub.lon!!)
                 pub.distance = distance.toBigDecimal().setScale(3, RoundingMode.UP).toDouble()
             }
-            pubs = (pubs.filter { it.name != null && it.name.isNotEmpty() }) as MutableList<Pub>
+            pubs = (pubs.filter { it.name != null && it.name!!.isNotEmpty() }) as MutableList<Pub>
             pubs.sortBy{ it.distance }
             setPubs(pubs)
 
