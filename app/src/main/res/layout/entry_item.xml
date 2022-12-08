@@ -7,13 +7,14 @@
     android:layout_height="wrap_content"
     android:layout_margin="20dp">
     <!-- A CardView that contains a TextView -->
-    <androidx.cardview.widget.CardView
+    <com.google.android.material.card.MaterialCardView
         android:id="@+id/card_view"
         android:layout_width="match_parent"
         android:layout_height="80dp"
         android:layout_gravity="center_horizontal"
         card_view:cardBackgroundColor="#F9A825"
-        card_view:cardCornerRadius="10dp">
+        card_view:strokeColor="#333333"
+        card_view:strokeWidth="2dp">
 
         <TextView
             android:id="@+id/entry_title"
@@ -21,7 +22,8 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_margin="5sp"
-            android:textSize="20sp" />
+            android:textSize="20sp"
+            android:textColor="#333333"/>
 
-    </androidx.cardview.widget.CardView>
+    </com.google.android.material.card.MaterialCardView>
 </LinearLayout>

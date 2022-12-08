@@ -55,7 +55,7 @@ class EntryDetailFragment : Fragment() {
                         binding.detailOpeningHours.text = "Hodiny: " + mapNullStringToEmpty(res.openingHours)
 //                    binding.detailCity.text = "Adresa: " + createAddress(pub.tags.street,pub.tags.houseNumber, pub.tags.city, pub.tags.country)
                         binding.editWebsite.text = "Stranka: " + mapNullStringToEmpty(res.website)
-                        binding.editDetailUserCount.text = "Ludi :${arguments?.getLong("users").toString()}"
+                        binding.editDetailUserCount.text = "Ludi: ${arguments?.getLong("users").toString()}"
                         binding.editGps.text = "GPS: ${res.lat}, ${res.lon}"
                         binding.editGpsMapButton.setOnClickListener {
                             val coordinates: String = "geo:" + res.lat.toString() + "," + res.lon.toString()

@@ -24,7 +24,7 @@
             android:id="@+id/detailOpeningHours"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="32dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
@@ -58,7 +58,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/editWebsite" />
+            app:layout_constraintTop_toBottomOf="@+id/editGpsMapButton" />
 
         <TextView
             android:id="@+id/editDetailUserCount"
@@ -74,10 +74,11 @@
             android:id="@+id/editGpsMapButton"
             android:layout_width="80dp"
             android:layout_height="41dp"
-            android:layout_marginStart="8dp"
+            android:layout_marginTop="32dp"
             android:text="MAPA"
-            app:layout_constraintBottom_toTopOf="@+id/editDetailUserCount"
-            app:layout_constraintStart_toEndOf="@+id/editGps"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/editWebsite" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </FrameLayout>
