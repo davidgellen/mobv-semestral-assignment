@@ -1,12 +1,11 @@
 package com.example.cv2.database
 
 import android.content.Context
-import android.util.Log
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
-import com.example.cv2.dao.ContactDao
-import com.example.cv2.dao.PubDao
+import com.example.cv2.database.dao.ContactDao
+import com.example.cv2.database.dao.PubDao
 import com.example.cv2.data.entity.Contact
 import com.example.cv2.data.entity.Pub
 

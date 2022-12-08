@@ -1,4 +1,4 @@
-package com.example.cv2.dao
+package com.example.cv2.database.dao
 
 import androidx.room.*
 import com.example.cv2.data.entity.Pub

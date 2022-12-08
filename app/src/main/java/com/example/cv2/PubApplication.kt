@@ -1,9 +1,9 @@
-package com.example.cv2.application
+package com.example.cv2
 
 import android.app.Application
 import com.example.cv2.database.AppDatabase
-import com.example.cv2.repository.ContactRepository
-import com.example.cv2.repository.PubRepository
+import com.example.cv2.database.repository.ContactRepository
+import com.example.cv2.database.repository.PubRepository
 
 class PubApplication : Application() {
     val database: AppDatabase by lazy { AppDatabase.getDatabase(this) }

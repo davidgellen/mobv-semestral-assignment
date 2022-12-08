@@ -6,14 +6,13 @@ import android.util.Log
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.lifecycle.*
-import com.example.cv2.application.PubApplication
-import com.example.cv2.dao.PubDao
+import com.example.cv2.PubApplication
 import com.example.cv2.data.entity.Pub
 import com.example.cv2.data.request.RefreshTokenRequestBody
 import com.example.cv2.data.response.PubResponseBody
 import com.example.cv2.data.response.RegisterResponseBody
 import com.example.cv2.mapper.PubMapper
-import com.example.cv2.repository.PubRepository
+import com.example.cv2.database.repository.PubRepository
 import com.example.cv2.service.RetrofitNewPubApi
 import com.example.cv2.service.RetrofitUserApi
 import com.example.cv2.utils.ConnectivityUtils

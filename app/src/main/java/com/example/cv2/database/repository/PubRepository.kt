@@ -1,6 +1,6 @@
-package com.example.cv2.repository
+package com.example.cv2.database.repository
 
-import com.example.cv2.dao.PubDao
+import com.example.cv2.database.dao.PubDao
 import com.example.cv2.data.entity.Pub
 
 class PubRepository(

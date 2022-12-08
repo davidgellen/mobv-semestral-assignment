@@ -127,7 +127,7 @@
     </fragment>
     <fragment
         android:id="@+id/checkInPubFragment"
-        android:name="com.example.cv2.CheckInPubFragment"
+        android:name="com.example.cv2.fragment.CheckInPubFragment"
         android:label="Nahlásiť do Podniku"
         tools:layout="@layout/fragment_check_in_pub" >
         <action

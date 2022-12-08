@@ -1,6 +1,6 @@
-package com.example.cv2.repository
+package com.example.cv2.database.repository
 
-import com.example.cv2.dao.ContactDao
+import com.example.cv2.database.dao.ContactDao
 import com.example.cv2.data.entity.Contact
 
 class ContactRepository(

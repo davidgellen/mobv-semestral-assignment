@@ -8,11 +8,10 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.example.cv2.application.PubApplication
-import com.example.cv2.dao.PubDao
+import com.example.cv2.PubApplication
 import com.example.cv2.data.entity.Pub
 import com.example.cv2.mapper.PubMapper
-import com.example.cv2.repository.PubRepository
+import com.example.cv2.database.repository.PubRepository
 import com.example.cv2.service.RetrofitOverpassApi
 import com.example.cv2.utils.DistanceUtils
 import com.google.android.gms.location.FusedLocationProviderClient

@@ -11,7 +11,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.navigation.fragment.findNavController
 import com.example.cv2.R
 import com.example.cv2.adapter.PubAdapter
-import com.example.cv2.application.PubApplication
+import com.example.cv2.PubApplication
 import com.example.cv2.data.model.PubViewModel
 import com.example.cv2.data.model.PubViewModelFactory
 import com.example.cv2.databinding.FragmentAllEntriesBinding

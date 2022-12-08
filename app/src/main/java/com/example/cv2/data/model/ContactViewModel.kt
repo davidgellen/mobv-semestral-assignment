@@ -5,19 +5,15 @@ import android.os.Build
 import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.lifecycle.*
-import androidx.recyclerview.widget.RecyclerView
-import com.example.cv2.adapter.ContactAdapter
-import com.example.cv2.application.PubApplication
-import com.example.cv2.dao.ContactDao
+import com.example.cv2.PubApplication
 import com.example.cv2.data.entity.Contact
 import com.example.cv2.data.response.ContactResponseBody
 import com.example.cv2.mapper.ContactResponseToEntityMapper
-import com.example.cv2.repository.ContactRepository
+import com.example.cv2.database.repository.ContactRepository
 import com.example.cv2.service.RetrofitFriendApi
 import com.example.cv2.utils.ConnectivityUtils
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
 class ContactViewModel(

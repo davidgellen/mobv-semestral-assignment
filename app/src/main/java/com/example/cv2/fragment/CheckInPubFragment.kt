@@ -1,47 +1,28 @@
-package com.example.cv2
+package com.example.cv2.fragment
 
-import android.Manifest
 import android.content.Context
-import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
-import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import android.widget.Toolbar
 import androidx.annotation.RequiresApi
-import androidx.appcompat.app.AppCompatActivity
-import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.navigation.fragment.findNavController
 import com.example.cv2.adapter.CheckInPubAdapter
-import com.example.cv2.adapter.ContactAdapter
-import com.example.cv2.application.PubApplication
-import com.example.cv2.data.entity.Pub
+import com.example.cv2.PubApplication
 import com.example.cv2.data.model.CheckInPubViewModel
 import com.example.cv2.data.model.CheckInPubViewModelFactory
-import com.example.cv2.data.model.ContactViewModel
-import com.example.cv2.data.model.ContactViewModelFactory
 import com.example.cv2.data.request.CheckIntoPubRequestBody
 import com.example.cv2.databinding.FragmentCheckInPubBinding
-import com.example.cv2.mapper.PubMapper
 import com.example.cv2.service.RetrofitNewPubApi
-import com.example.cv2.service.RetrofitOverpassApi
 import com.example.cv2.utils.ConnectivityUtils
-import com.example.cv2.utils.DistanceUtils
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
-import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
-import java.lang.Math.pow
-import java.math.RoundingMode
-import kotlin.math.*
 
 class CheckInPubFragment : Fragment() {
 

@@ -2,7 +2,6 @@ package com.example.cv2.fragment
 
 import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -12,11 +11,10 @@ import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import com.example.cv2.R
 import com.example.cv2.adapter.ContactAdapter
-import com.example.cv2.application.PubApplication
+import com.example.cv2.PubApplication
 import com.example.cv2.data.model.ContactViewModel
 import com.example.cv2.data.model.ContactViewModelFactory
 import com.example.cv2.databinding.FragmentAllFriendsBinding
-import com.example.cv2.utils.ConnectivityUtils
 
 class AllFriendsFragment : Fragment() {
 
