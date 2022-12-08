@@ -75,8 +75,6 @@ class CheckInPubFragment : Fragment() {
         }!!
         checkInPubViewModel.fusedLocationProviderClient = fusedLocationProviderClient
         val recyclerView = binding.checkInRecyclerView
-//        recyclerView.adapter =
-//            activity?.applicationContext?.let { CheckInPubAdapter(view, mutableListOf()) }
         if (ConnectivityUtils().isOnline(context!!)) {
             checkInPubViewModel.fetchLocation(false)
         } else {
@@ -85,11 +83,6 @@ class CheckInPubFragment : Fragment() {
         checkInPubViewModel.pubs.observe(viewLifecycleOwner) {
             recyclerView.adapter = CheckInPubAdapter(view, checkInPubViewModel)
             binding.checkInPubConfirmButton.setOnClickListener {
-//                if (ConnectivityUtils().isOnline(context!!)) {
-//                    checkInPubViewModel.fetchLocation(false)
-//                } else {
-//                    Toast.makeText(context!!, "CHYBA PRISTUP K INTERNETU", Toast.LENGTH_LONG).show()
-//                }
                 val pub = (binding.checkInRecyclerView.adapter as CheckInPubAdapter).getPub()
                 if (pub == null) {
                     activity?.runOnUiThread {

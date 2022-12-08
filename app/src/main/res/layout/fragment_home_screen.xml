@@ -14,10 +14,9 @@
             android:id="@+id/homeScreenToCheckInButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="OZNACIT SA"
+            android:text="OZNAČIŤ SA"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.511"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/homeScreenToPubListButton" />
 
@@ -28,10 +27,8 @@
             android:text="Priatelia"
             app:layout_constraintBottom_toTopOf="@+id/homeScreenToPubListButton"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.498"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.276" />
+            app:layout_constraintTop_toTopOf="parent" />
 
         <Button
             android:id="@+id/homeScreenToPubListButton"

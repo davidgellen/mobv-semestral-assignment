@@ -33,7 +33,16 @@ class ContactAdapter(
                 bundle.putLong("pubApiId", contactViewModel.entries.value?.get(position)?.barId!!.toLong())
                 val pub = contactViewModel.getApplication().pubRepository.getByImportedId(contactViewModel.entries.value?.get(position)?.barId!!.toLong())
                 bundle.putSerializable("entry", pub)
-                bundle.putSerializable("users", pub.users)
+                if (pub != null) {
+                    if (pub.users != null) {
+                        bundle.putLong("users", pub.users!!)
+                    } else {
+                        bundle.putLong("users", 1)
+                    }
+                } else {
+                    bundle.putLong("users", 1)
+                }
+
                 view.findNavController()
                     .navigate(R.id.action_allFriendsFragment_to_entryDetailFragment, bundle)
             }
