@@ -49,7 +49,6 @@ class AllEntriesFragment : Fragment() {
         currentSort = "none"
 
         val recyclerView = binding.enttriesRecycleView
-//        recyclerView.adapter = PubAdapter(view, pubViewModel)
 
         pubViewModel.loadData(false)
         pubViewModel.entries.observe(viewLifecycleOwner) {
@@ -61,9 +60,11 @@ class AllEntriesFragment : Fragment() {
         binding.entriesToMenuButton.setOnClickListener {
             findNavController().navigate(R.id.action_allEntriesFragment_to_homeScreenFragment)
         }
+
         binding.entriesToCheckInButton.setOnClickListener {
             findNavController().navigate(R.id.action_allEntriesFragment_to_checkInPubFragment)
         }
+
         binding.swipeContainer.setOnRefreshListener {
             pubViewModel.loadData(false)
             binding.swipeContainer.isRefreshing = false

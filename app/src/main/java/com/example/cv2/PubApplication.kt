@@ -7,6 +7,6 @@ import com.example.cv2.database.repository.PubRepository
 
 class PubApplication : Application() {
     val database: AppDatabase by lazy { AppDatabase.getDatabase(this) }
-    val pubRepository by lazy { PubRepository(database.pubDao()) }
+    val pubRepository by lazy { PubRepository(database.pubDao(), this) }
     val contactRepository by lazy { ContactRepository(database.contactDao()) }
 }
