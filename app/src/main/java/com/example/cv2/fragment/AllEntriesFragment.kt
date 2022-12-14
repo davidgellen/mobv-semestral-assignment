@@ -80,28 +80,11 @@ class AllEntriesFragment : Fragment() {
             }
 
             override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
-                sortByProperty(menuItem.itemId)
+                pubViewModel.sortByProperty(menuItem.itemId)
+                (binding.enttriesRecycleView.adapter as PubAdapter).notifyDataSetChanged()
                 return true
             }
         }, viewLifecycleOwner, Lifecycle.State.RESUMED)
-    }
-
-    private fun sortByProperty(
-        currentId: Int
-    ) {
-        if (currentSort != currentId.toString()) {
-            when (currentId) {
-                R.id.menuSortPubName -> pubViewModel.entries.value?.sortBy { it.name }
-                R.id.menuSortPubDistance -> pubViewModel.entries.value?.sortBy { it.distance }
-                R.id.menuSortPubPeople -> pubViewModel.entries.value?.sortBy { it.users }
-                else -> pubViewModel.entries.value?.sortBy { it.users }
-            }
-            (binding.enttriesRecycleView.adapter as PubAdapter).notifyDataSetChanged()
-            currentSort = currentId.toString()
-        } else {
-            pubViewModel.entries.value?.reverse()
-            (binding.enttriesRecycleView.adapter as PubAdapter).notifyDataSetChanged()
-        }
     }
 
     override fun onDestroy() {
